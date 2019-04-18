@@ -4,27 +4,12 @@ const ORIGIN = {x:0.5, y:0.5}
 
 class Shape {
 
-    constructor(name, points, rotation = 0) {
+    constructor(name, points, rotation = 0, creator) {
         this.name = name;
         this.points = points;
+        this.size = points.length;
+        this.creator = creator;
         if(rotation!=0) this.rotateShape(rotation);
-    }
-
-    /*A method that delegates moviment to a point*/
-    addMovimentConstraint(pointId, movimentType){
-        this.points[pointId][movimentType] = true;
-        this.points[pointId].affected = [];
-    }
-
-    /*A method that delegates moviment reflecting other point moviment */
-    addMovimentRelativeConstraint(pointId, referenceId, movimentType, inverse = true){
-        //Adds the Parent reference as well as if its moviment is opposite or not
-        this.points[pointId].reference = referenceId;
-        this.points[pointId][movimentType] = true;
-        this.points[pointId].inverse = inverse;
-
-        //Adds to Parent as a list
-        this.points[referenceId].affected.push(pointId);
     }
 
     /*Generates a Regular Polygon based in:
@@ -47,7 +32,7 @@ class Shape {
             let newPoint = this.rotatePoint(angle, previous.x , previous.y);
             points.push({id:i, x:newPoint.x, y:newPoint.y});
         }
-        return new Shape(name, points, rotation);
+        return new Shape(name, points, rotation, "@SCD");
     }
 
     /** Rotates all points within the shape
