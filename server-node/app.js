@@ -14,12 +14,16 @@ io.on('connection', function (socket){
    console.log('connection');
    let classDiagram = new Diagram("ClassDiagram", "Yvtq8k3n");
 
-   socket.emit('sendShapesList', classDiagram.getShapes());
+   socket.emit('sendContents', classDiagram.getContents());
 
    socket.on('createContent', function (from, data, fn) {
    		let content = classDiagram.createContent(data, from);
 
-   		fn(content.changedby[content.changedby.length-1]);
+   		//Notify message
+   		fn(content.name, content.changed_by[content.changed_by.length-1]);
+
+   		//Notify all changes
+   		socket.emit('sendContents', classDiagram.getContents());
    });
 
 
@@ -32,7 +36,7 @@ io.on('connection', function (socket){
                 content.addMovimentConstraint(data.pointId, data.moviment, from);
           		
           		//Returns the operation
-                fn(content.changedby[content.changedby.length-1]);
+                fn(content.name, content.changed_by[content.changed_by.length-1]);
             	break;
             }
         }    

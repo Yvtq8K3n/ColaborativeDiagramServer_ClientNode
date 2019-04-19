@@ -1,5 +1,4 @@
 /*jshint esversion: 6 */
-var Shape = require('./shape.js');
 var Content = require('./content.js');
 
 var Region = Object.freeze({"north":{x: 0.5, y:0}, "soulth":{x: 0.5, y:1}, "west":{x: 0, y:0.5}, "east":{x: 1, y:0.5}});
@@ -10,50 +9,41 @@ class Diagram {
     constructor(name, creator) {
         this.diagramId = name;
         this.creator = creator;
-        this.shapes = [];
         this.contents = [];
-        this.generateDefaultShapes();
+        this.generateDefaultContents();
     }
 
-    generateDefaultShapes(){
-        //Creates shapes
-        let triangle = Shape.generate("Triangle", 3);
-        let square   = Shape.generate("Square", 4, Math.PI/4);
-        let rhombus  = Shape.generate("Rhombus", 4);
-        let pentagon = Shape.generate("Rhombus", 5);
-        let hexagon  = Shape.generate("Hexagon", 6);
-        //let heptgon  = Shape.generate("Heptgon", 7);
-        //let octagon  = Shape.generate("Octagon", 8);
-        //let circle   = Shape.generate("Circle", 36);
+    generateDefaultContents(){
+        //Generate Contents
+        let triangle = Content.generatePolygon("Triangle", 3);
+        let square   = Content.generatePolygon("Square", 4, Math.PI/4);
+        let rhombus  = Content.generatePolygon("Rhombus", 4);
+        let pentagon = Content.generatePolygon("Pentagon", 5);
+        let hexagon  = Content.generatePolygon("Hexagon", 6);
 
-        //Adds shapes
-        this.shapes.push(triangle);
-        this.shapes.push(rhombus, square, pentagon, hexagon);
-        //this.shapes.push(heptgon, octagon, circle);
+        //Adds Contents
+        this.contents.push(triangle);
+        this.contents.push(rhombus, square, pentagon, hexagon);
     }
 
-    retrieveShape(name){
-        for(var i = 0; i < this.shapes.length; i++) {
-            if (this.shapes[i].name == name) {
-                return this.shapes[i];
+    createContent(obj, creator){
+        let content = new Content(obj.name, obj.points, creator, obj.rotation);
+        this.contents.push(content);
+        return content;
+    }
+
+    retrieveContent(name){
+        for(var i = 0; i < this.contents.length; i++) {
+            if (this.contents[i].name == name) {
+                return this.contents[i];
             }
         }
         throw "Shape not found";
     }
 
-    createContent(obj, creator){
-        let shape = this.retrieveShape(obj.shape);
-        let content = new Content(obj.name, shape, creator);
-        this.contents.push(content);
-
-        return content;
-        //let triangle = Shape.generate("Triangle", 3);
-        //triangle.addMovimentConstraint(0, MovimentType.H); //if (MovimentType[movimentType] == undefined) throw "Invalid Moviment type";
-    }
-
     createContentComposed(...names){
-        let shape = Diagram.retrieveShape(name);
-        this.content.push(shape);    
+        //let shape = Diagram.retrieveShape(name);
+        //this.content.push(shape);    
     }
 
     asdsa(){
