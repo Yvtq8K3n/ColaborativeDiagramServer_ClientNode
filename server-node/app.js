@@ -26,6 +26,20 @@ io.on('connection', function (socket){
    		socket.emit('sendContents', classDiagram.getContents());
    });
 
+   socket.on('createContentComposed', function (from, data, fn) {
+      let content = classDiagram.createContentComposed(data.name, data.parent, from);
+
+      data.childrens.forEach(function(element) {
+          classDiagram.addChildren(content.name, element.name, element.region)
+      });
+
+      //Notify message
+      fn(content.name, content);
+
+      //Notify all changes
+      socket.emit('sendContents', classDiagram.getContents());
+   });
+
 
    socket.on('addMovimentConstraint', function (from, data, fn) {
    		let contents = classDiagram.getContents();

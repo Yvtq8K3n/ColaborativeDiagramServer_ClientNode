@@ -1,7 +1,14 @@
 /*jshint esversion: 6 */
 var Content = require('./content.js');
+var ContentComposed = require('./contentComposed.js');
 
-var Region = Object.freeze({"north":{x: 0.5, y:0}, "soulth":{x: 0.5, y:1}, "west":{x: 0, y:0.5}, "east":{x: 1, y:0.5}});
+var Region = Object.freeze({
+        "North":{x: 0.5, y:0}, "South":{x: 0.5, y:1}, 
+        "West":{x: 0, y:0.5}, "East":{x: 1, y:0.5},
+        "Northwest":{x: 0, y:0}, "Northeast":{x: 1, y:0},
+        "Southwest":{x: 0, y:1}, "Southeast":{x: 1, y:1},
+        "Center":{x: 0.5, y: 0.5}
+    });
 const MovimentType = ({"V":"vertical", "H":"horizontal", "DA":"diagonalasc", "DD":"diagonaldes", "ANY":"any"});
 
 class Diagram {
@@ -29,7 +36,24 @@ class Diagram {
     createContent(obj, creator){
         let content = new Content(obj.name, obj.points, creator, obj.rotation);
         this.contents.push(content);
+
         return content;
+    }
+
+    createContentComposed(name, parentName, creator){
+        let parent = this.retrieveContent(parentName);
+
+        let contentComposed = new ContentComposed(name, parent, creator);
+        this.contents.push(contentComposed);
+
+        return contentComposed;
+    }
+
+    addChildren(composedName, contentName, region){
+        let child = JSON.parse(JSON.stringify(this.retrieveContent(contentName)));
+
+        let composedContent = this.retrieveContent(composedName);
+        composedContent.addChildren(child, Region[region]);
     }
 
     retrieveContent(name){
@@ -41,10 +65,7 @@ class Diagram {
         throw "Shape not found";
     }
 
-    createContentComposed(...names){
-        //let shape = Diagram.retrieveShape(name);
-        //this.content.push(shape);    
-    }
+    
 
     asdsa(){
         //Creates an triangle that can move its top vertice
