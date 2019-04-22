@@ -8,25 +8,35 @@ http.listen(8080, function () {
   console.log('listening on *:8080');
 });
 
+//Create diagram
+let classDiagram = new Diagram("ClassDiagram", "Yvtq8k3n");
 //////////////////////////////////////////////////////
 
 io.on('connection', function (socket){
     console.log('A new connection was created on socket:', socket.id);
 
-    //Create diagram
-    let classDiagram = new Diagram("ClassDiagram", "Yvtq8k3n");
-
     //Sending Diagram Contents
+    console.log("Sending the latest contents!");
     socket.emit('contents', classDiagram.getContents());
 
+
     socket.on('createContent', function (data, fn) {
-   		let content = classDiagram.createContent(data, data.creator);
+    	try{
+    		let content = classDiagram.createContent(data, data.creator);
 
-   		//Notify message
-   		fn(content.name, content.changed_by[content.changed_by.length-1]);
+	    	//Notify message
+	   		fn(data.name+": Content was created ");
 
-   		//Notify all changes
-   		socket.emit('contentCreated', classDiagram.retrieveContent(content.name));
+	   		//Notify all changes
+	   		io.sockets.emit('contentCreated', classDiagram.retrieveContent(content.name));
+    	}catch(err) {
+		  	//Notify error
+	   		fn(data.name+": "+err);
+		}   		
+    });
+
+    socket.on('disconnect', function () {
+       console.log('user disconnected');
     });
 
     socket.on('createContentComposed', function (data, fn) {

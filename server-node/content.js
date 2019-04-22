@@ -10,7 +10,6 @@ class Content {
         this.creator = creator;
         this.changed_by = [];
         this.size = points.length;
-        this.rotation = rotation;
 
         //Apply rotation if not 0
         if (rotation != 0) this.rotatePoints(rotation);

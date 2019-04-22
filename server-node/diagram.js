@@ -34,14 +34,20 @@ class Diagram {
     }
 
     createContent(obj, creator){
-        let content = new Content(obj.name, obj.points, creator, obj.rotation);
-        this.contents.push(content);
+        try{
+            //Check if object doenst exist
+            this.retrieveContent(obj.name);
+        }catch(err) {
+            //Create object
+            let content = new Content(obj.name, obj.points, creator, obj.rotation);
+            this.contents.push(content);
 
-        return content;
+            return content;
+        }
+        throw "Content already exists";
     }
 
     createContentComposed(name, parentName, creator){
-        console.log(parentName);
         let parent = this.retrieveContent(parentName);
 
         console.log("part2");
@@ -59,7 +65,6 @@ class Diagram {
     }
 
     retrieveContent(name){
-        console.log(name);
         for(var i = 0; i < this.contents.length; i++) {
             if (this.contents[i].name == name) {
                 return this.contents[i];
