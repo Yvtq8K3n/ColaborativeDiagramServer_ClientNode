@@ -40,7 +40,7 @@ socket.emit('addMovimentConstraint',
 	}
 );
 
-socket.emit('createContentComposed', 'client-node', 
+socket.emit('createContentComposed',
 	{
 		name:"CustomSquare",
 		parent:"MyTriangle", 

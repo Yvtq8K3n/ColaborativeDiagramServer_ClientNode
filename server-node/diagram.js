@@ -41,8 +41,10 @@ class Diagram {
     }
 
     createContentComposed(name, parentName, creator){
+        console.log(parentName);
         let parent = this.retrieveContent(parentName);
 
+        console.log("part2");
         let contentComposed = new ContentComposed(name, parent, creator);
         this.contents.push(contentComposed);
 
@@ -57,6 +59,7 @@ class Diagram {
     }
 
     retrieveContent(name){
+        console.log(name);
         for(var i = 0; i < this.contents.length; i++) {
             if (this.contents[i].name == name) {
                 return this.contents[i];

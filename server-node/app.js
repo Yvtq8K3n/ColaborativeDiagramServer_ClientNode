@@ -11,15 +11,15 @@ http.listen(8080, function () {
 //////////////////////////////////////////////////////
 
 io.on('connection', function (socket){
-   console.log('A new connection was created on socket:', socket.id);
+    console.log('A new connection was created on socket:', socket.id);
 
-   //Create diagram
-   let classDiagram = new Diagram("ClassDiagram", "Yvtq8k3n");
+    //Create diagram
+    let classDiagram = new Diagram("ClassDiagram", "Yvtq8k3n");
 
-   //Sending Diagram Contents
-   socket.emit('contents', classDiagram.getContents());
+    //Sending Diagram Contents
+    socket.emit('contents', classDiagram.getContents());
 
-   socket.on('createContent', function (data, fn) {
+    socket.on('createContent', function (data, fn) {
    		let content = classDiagram.createContent(data, data.creator);
 
    		//Notify message
@@ -27,24 +27,25 @@ io.on('connection', function (socket){
 
    		//Notify all changes
    		socket.emit('contents', classDiagram.getContents());
-   });
+    });
 
-   socket.on('createContentComposed', function (data, fn) {
-      let content = classDiagram.createContentComposed(data.name, data.parent, data.creator);
+    socket.on('createContentComposed', function (data, fn) {
 
-      data.childrens.forEach(function(element) {
+   	    let content = classDiagram.createContentComposed(data.name, data.parent, data.creator);
+
+        data.childrens.forEach(function(element) {
           classDiagram.addChildren(content.name, element.name, element.region, element.percentage);
-      });
+        });
 
-      //Notify message
-      fn(content.name, content);
+        //Notify message
+        fn(content.name, content);
 
-      //Notify all changes
-      socket.emit('contents', classDiagram.getContents());
-   });
+        //Notify all changes
+        socket.emit('contents', classDiagram.getContents());
+    });
 
 
-   socket.on('addMovimentConstraint', function (data, fn) {
+    socket.on('addMovimentConstraint', function (data, fn) {
    		let contents = classDiagram.getContents();
 
    		for(var i = 0; i < contents.length; i++) {
@@ -57,6 +58,6 @@ io.on('connection', function (socket){
             	break;
             }
         }    
-   });
+    });
 });
 
