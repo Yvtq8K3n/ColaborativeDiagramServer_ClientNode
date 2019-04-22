@@ -6,10 +6,11 @@ class Content {
     constructor(name, points, creator, rotation = 0) {
         this.name = name;
         this.type = "basic";
-        this.points = points;
+        this.points = points; 
         this.creator = creator;
         this.changed_by = [];
         this.size = points.length;
+        this.rotation = rotation;
 
         //Apply rotation if not 0
         if (rotation != 0) this.rotatePoints(rotation);

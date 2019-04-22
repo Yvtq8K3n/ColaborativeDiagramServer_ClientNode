@@ -21,6 +21,7 @@ socket.emit('createContent',
 			{id: 1, x: 0,   y: 1},
 			{id: 2, x: 1,   y: 1}
 		],
+		rotation: 0.5,
 		creator: "client-node" 
 	}, function (name, data) { // args are sent in order to acknowledgement function
 		console.log("\nContentCreate: "+name);
