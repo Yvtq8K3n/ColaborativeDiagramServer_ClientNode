@@ -10,9 +10,9 @@ socket.on('connect', function (socket) {
 socket.on('contents', function (data) {
 	console.log("Contents:")
 	console.log(data);
+	//console.log(JSON.stringify(data, null, 4));
 });
 
-//console.log(JSON.stringify(data, null, 4));
 socket.emit('createContent',
 	{
 		name:"MyTriangle", 
@@ -23,13 +23,12 @@ socket.emit('createContent',
 		],
 		rotation: 0.5,
 		creator: "client-node" 
-	}, function (name, data) { // args are sent in order to acknowledgement function
-		console.log("\nContentCreate: "+name);
-  		console.log(data);
+	}, function (message) { // args are sent in order to acknowledgement function
+		console.log("\n"+message);
 	}
 );
 
-socket.emit('addMovimentConstraint',
+/*socket.emit('addMovimentConstraint',
 	{
 		name:"MyTriangle",
 		pointId : 0,
@@ -39,9 +38,9 @@ socket.emit('addMovimentConstraint',
 		console.log("\nMovimentConstraint: "+name);
   		console.log(data);
 	}
-);
+);*/
 
-socket.emit('createContentComposed',
+/*socket.emit('createContentComposed',
 	{
 		name:"CustomSquare",
 		parent:"MyTriangle", 
@@ -56,7 +55,7 @@ socket.emit('createContentComposed',
   		console.log(JSON.stringify(data, null, 4));
   		
 	}
-);
+);*/
 
 
 
