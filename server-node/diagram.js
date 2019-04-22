@@ -49,11 +49,11 @@ class Diagram {
         return contentComposed;
     }
 
-    addChildren(composedName, contentName, region){
+    addChildren(composedName, contentName, region, percentage){
         let child = JSON.parse(JSON.stringify(this.retrieveContent(contentName)));
 
         let composedContent = this.retrieveContent(composedName);
-        composedContent.addChildren(child, Region[region]);
+        composedContent.addChildren(child, Region[region], percentage);
     }
 
     retrieveContent(name){

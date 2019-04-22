@@ -3,6 +3,7 @@
 class ContentComposed {
     constructor(name, parentContent, creator) {
     	this.name = name;
+        this.type = "composed";
         this.parent = parentContent;
         this.creator = creator;
         this.children = [];
@@ -10,23 +11,50 @@ class ContentComposed {
         this.size = this.parent.points.length;
     }
 
-    addChildren(content, region){
+    //Normal percentage varies betwen 0-1
+    addChildren(content, region, percentage){
     	let points = content.points;
 
-    	//Converts to a 1/3 scale
+    	//Converts to the given percentage
     	for(let i=0; i<points.length; i++){
     		points[i].id = this.size++;
-    		points[i].x = points[i].x / 3;
-    		points[i].y = points[i].y / 3;
+    		points[i].x = points[i].x * percentage;
+    		points[i].y = points[i].y * percentage;
     	}
 
-    	//Position the grid in the curret place 
-    	for(let i=0; i<points.length; i++){
-    		points[i].x = points[i].x * Math.round(region.x/0.3);
-    		points[i].y = points[i].y * Math.round(region.y/0.3);
-    	}
+        //Moves based on region
+        for(let i=0; i<points.length; i++){
+            //Re-positinate based on Region
+            if (region.x == 0.5) points[i].x = points[i].x + (1 - percentage)/2;
+            if (region.y == 0.5) points[i].y = points[i].y + (1 - percentage)/2;
+
+            //Moves points back into area, in case region is out. 
+            if (region.x == 1) points[i].x = points[i].x - percentage;
+            if (region.y == 1) points[i].y = points[i].y - percentage;
+        }
 
     	this.children.push({content: content, region: region});
+    }
+
+    //GridLayout
+    /*addChildren(content, region){
+        let points = content.points;
+
+
+        //Converts to a 1/3 scale
+        for(let i=0; i<points.length; i++){
+            points[i].id = this.size++;
+            points[i].x = points[i].x / 3;
+            points[i].y = points[i].y / 3;
+        }
+
+        //Position the grid in the curret place 
+        for(let i=0; i<points.length; i++){
+            points[i].x = points[i].x * Math.round(region.x/0.3);
+            points[i].y = points[i].y * Math.round(region.y/0.3);
+        }
+
+        this.children.push({content: content, region: region});
     }
 
     /*A method that delegates moviment to a point*/

@@ -11,43 +11,46 @@ http.listen(8080, function () {
 //////////////////////////////////////////////////////
 
 io.on('connection', function (socket){
-   console.log('connection');
+   console.log('A new connection was created on socket:', socket.id);
+
+   //Create diagram
    let classDiagram = new Diagram("ClassDiagram", "Yvtq8k3n");
 
-   socket.emit('sendContents', classDiagram.getContents());
+   //Sending Diagram Contents
+   socket.emit('contents', classDiagram.getContents());
 
-   socket.on('createContent', function (from, data, fn) {
-   		let content = classDiagram.createContent(data, from);
+   socket.on('createContent', function (data, fn) {
+   		let content = classDiagram.createContent(data, data.creator);
 
    		//Notify message
    		fn(content.name, content.changed_by[content.changed_by.length-1]);
 
    		//Notify all changes
-   		socket.emit('sendContents', classDiagram.getContents());
+   		socket.emit('contents', classDiagram.getContents());
    });
 
-   socket.on('createContentComposed', function (from, data, fn) {
-      let content = classDiagram.createContentComposed(data.name, data.parent, from);
+   socket.on('createContentComposed', function (data, fn) {
+      let content = classDiagram.createContentComposed(data.name, data.parent, data.creator);
 
       data.childrens.forEach(function(element) {
-          classDiagram.addChildren(content.name, element.name, element.region)
+          classDiagram.addChildren(content.name, element.name, element.region, element.percentage);
       });
 
       //Notify message
       fn(content.name, content);
 
       //Notify all changes
-      socket.emit('sendContents', classDiagram.getContents());
+      socket.emit('contents', classDiagram.getContents());
    });
 
 
-   socket.on('addMovimentConstraint', function (from, data, fn) {
+   socket.on('addMovimentConstraint', function (data, fn) {
    		let contents = classDiagram.getContents();
 
    		for(var i = 0; i < contents.length; i++) {
             if (contents[i].name == data.name) {
             	let content = contents[i];
-                content.addMovimentConstraint(data.pointId, data.moviment, from);
+                content.addMovimentConstraint(data.pointId, data.moviment, data.creator);
           		
           		//Returns the operation
                 fn(content.name, content.changed_by[content.changed_by.length-1]);

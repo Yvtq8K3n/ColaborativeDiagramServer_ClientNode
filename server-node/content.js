@@ -5,9 +5,11 @@ const ORIGIN = {x:0.5, y:0.5}
 class Content {
     constructor(name, points, creator, rotation = 0) {
         this.name = name;
+        this.type = "basic";
         this.points = points;
         this.creator = creator;
         this.changed_by = [];
+        this.size = points.length;
 
         //Apply rotation if not 0
         if (rotation != 0) this.rotatePoints(rotation);
