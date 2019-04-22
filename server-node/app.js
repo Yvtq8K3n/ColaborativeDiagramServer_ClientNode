@@ -26,7 +26,7 @@ io.on('connection', function (socket){
    		fn(content.name, content.changed_by[content.changed_by.length-1]);
 
    		//Notify all changes
-   		socket.emit('contents', classDiagram.getContents());
+   		//socket.emit('contents', classDiagram.getContents());
     });
 
     socket.on('createContentComposed', function (data, fn) {
@@ -41,7 +41,7 @@ io.on('connection', function (socket){
         fn(content.name, content);
 
         //Notify all changes
-        socket.emit('contents', classDiagram.getContents());
+        //socket.emit('contents', classDiagram.getContents());
     });
 
 
