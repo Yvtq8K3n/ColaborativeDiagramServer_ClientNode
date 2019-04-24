@@ -2,13 +2,6 @@
 var Content = require('./content.js');
 var ContentComposed = require('./contentComposed.js');
 
-var Region = Object.freeze({
-        "North":{x: 0.5, y:0}, "South":{x: 0.5, y:1}, 
-        "West":{x: 0, y:0.5}, "East":{x: 1, y:0.5},
-        "Northwest":{x: 0, y:0}, "Northeast":{x: 1, y:0},
-        "Southwest":{x: 0, y:1}, "Southeast":{x: 1, y:1},
-        "Center":{x: 0.5, y: 0.5}
-    });
 const MovimentType = ({"V":"vertical", "H":"horizontal", "DA":"diagonalasc", "DD":"diagonaldes", "ANY":"any"});
 
 class Diagram {
@@ -22,6 +15,7 @@ class Diagram {
 
     generateDefaultContents(){
         //Generate Contents
+        let none = Content.generatePolygon("None", 0);
         let triangle = Content.generatePolygon("Triangle", 3);
         let square   = Content.generatePolygon("Square", 4, Math.PI/4);
         let rhombus  = Content.generatePolygon("Rhombus", 4);
@@ -29,7 +23,7 @@ class Diagram {
         let hexagon  = Content.generatePolygon("Hexagon", 6);
 
         //Adds Contents
-        this.contents.push(triangle);
+        this.contents.push(none, triangle);
         this.contents.push(rhombus, square, pentagon, hexagon);
     }
 
@@ -37,6 +31,7 @@ class Diagram {
         try{
             //Check if object doenst exist
             this.retrieveContent(obj.name);
+
         }catch(err) {
             //Create object
             let content = new Content(obj.name, obj.points, creator, obj.rotation);
@@ -48,20 +43,14 @@ class Diagram {
     }
 
     createContentComposed(name, parentName, creator){
+        //Retrieve parent
         let parent = this.retrieveContent(parentName);
 
-        console.log("part2");
+        //Create content composed
         let contentComposed = new ContentComposed(name, parent, creator);
         this.contents.push(contentComposed);
 
         return contentComposed;
-    }
-
-    addChildren(composedName, contentName, region, percentage){
-        let child = JSON.parse(JSON.stringify(this.retrieveContent(contentName)));
-
-        let composedContent = this.retrieveContent(composedName);
-        composedContent.addChildren(child, Region[region], percentage);
     }
 
     retrieveContent(name){
@@ -70,10 +59,8 @@ class Diagram {
                 return this.contents[i];
             }
         }
-        throw "Shape not found";
+        throw "Content not found";
     }
-
-    
 
     asdsa(){
         //Creates an triangle that can move its top vertice

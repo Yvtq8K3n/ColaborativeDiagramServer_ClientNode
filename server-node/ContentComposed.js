@@ -9,18 +9,54 @@ class ContentComposed {
         this.children = [];
         this.changed_by = [];
         this.size = this.parent.points.length;
+
+        //Adds a log registry 
+        this.changed_by.push({
+            changed_by: creator, 
+            changed_at: new Date(), 
+            summary:"Content was successfully created."
+        });
     }
 
     //Normal percentage varies betwen 0-1
-    addChildren(content, region, percentage){
-    	let points = content.points;
+    addChildren(content, region, percentage, creator){
+        console.log(JSON.stringify(content, null, 4));
+        //Moves the points to the desired position
+        this.shiftPosition(content, region, percentage);
 
-    	//Converts to the given percentage
-    	for(let i=0; i<points.length; i++){
-    		points[i].id = this.size++;
-    		points[i].x = points[i].x * percentage;
-    		points[i].y = points[i].y * percentage;
-    	}
+        //Add children
+    	this.children.push({id: this.children.length, content: content, region: region});
+
+        //Adds a log registry 
+        this.changed_by.push({
+            changed_by: creator, 
+            changed_at: new Date(), 
+            summary: content.name + " has been added has child."
+        });
+
+        return this.children.length-1;
+    }
+
+    //!!VER MELHOR
+    //An method that reajust the position of the points
+    //based in the region and the percentage
+    shiftPosition(content, region, percentage){
+        if (content.type=="composed"){
+            this.shiftPosition(content.parent, region, percentage);
+            content.children.forEach((element) => {
+                this.shiftPosition(element.content, region, percentage);
+            });
+            return;
+        }
+
+        console.log(content.name);
+        let points = content.points;
+        //Converts to the given percentage
+        for(let i=0; i< points.length; i++){
+            points[i].id = this.size++;
+            points[i].x = points[i].x * percentage;
+            points[i].y = points[i].y * percentage;
+        }
 
         //Moves based on region
         for(let i=0; i<points.length; i++){
@@ -28,12 +64,10 @@ class ContentComposed {
             if (region.x == 0.5) points[i].x = points[i].x + (1 - percentage)/2;
             if (region.y == 0.5) points[i].y = points[i].y + (1 - percentage)/2;
 
-            //Moves points back into area, in case region is out. 
-            if (region.x == 1) points[i].x = points[i].x - percentage;
-            if (region.y == 1) points[i].y = points[i].y - percentage;
+            //Moves points into the correct region
+            if (region.x == 1) points[i].x = 1 - points[i].x;
+            if (region.y == 1) points[i].y = 1 - points[i].y;
         }
-
-    	this.children.push({content: content, region: region});
     }
 
     //GridLayout

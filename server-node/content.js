@@ -18,7 +18,7 @@ class Content {
         this.changed_by.push({
             changed_by: creator, 
             changed_at: new Date(), 
-            summary:"A content has been created"
+            summary:"Content was successfully created."
         });
     }
 
@@ -87,8 +87,8 @@ class Content {
     }
 
 
-    /*A method that delegates moviment to a point*/
-    addMovimentConstraint(pointId, movimentType, creator){
+    //A method that delegates moviment to a point
+    /*addMovimentConstraint(pointId, movimentType, creator){
         this.points[pointId][movimentType] = true;
         this.points[pointId].affected = [];
 
@@ -98,10 +98,10 @@ class Content {
             changed_at: new Date(), 
             summary:"A moviment restriction has been added to point "+ pointId
         });
-    }
+    }*/
 
-    /*A method that delegates moviment reflecting other point moviment */
-    addMovimentRelativeConstraint(pointId, referenceId, movimentType, creator, inverse = true,){
+    //A method that delegates moviment reflecting other point moviment
+    /*addMovimentRelativeConstraint(pointId, referenceId, movimentType, creator, inverse = true,){
         //Adds the Parent reference as well as if its moviment is opposite or not
         this.points[pointId].reference = referenceId;
         this.points[pointId][movimentType] = true;
@@ -116,7 +116,7 @@ class Content {
             changed_at: new Date(), 
             summary:"A moviment restriction related to point "+referenceId+" has been added on point "+ pointId
         });
-    }
+    }*/
 }
 
 module.exports = Content;

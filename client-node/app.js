@@ -24,9 +24,72 @@ socket.emit('createContent',
 		rotation: 0.5,
 		creator: "client-node" 
 	}, function (message) { // args are sent in order to acknowledgement function
-		console.log("\n"+message);
+		console.log("\nContent: "+message);
 	}
 );
+
+//Create Illuminati Illuminati
+socket.emit('createContentComposed',
+	{
+		name:"Illuminati",
+		parent:"Triangle", 
+		creator: "client-node"
+	}, function (message) { // args are sent in order to acknowledgement function
+		console.log("\nContentComposed: "+message);  		
+	}
+);
+socket.emit('addContentComposedChild',
+	{
+		composed:"Illuminati",
+		name: "Hexagon", 
+		region: "NORTH", 
+		percentage: 0.4
+	}, function (message) { // args are sent in order to acknowledgement function
+		console.log("\nContentComposedChild: "+message);
+	}
+);
+
+//Create Funny everywhere IlluminatiMeme
+socket.emit('createContentComposed',
+	{
+		name:"IlluminatiIsReal",
+		parent:"None", 
+		creator: "client-node"
+	}, function (message) { // args are sent in order to acknowledgement function
+		console.log("\nContentComposed: "+message);  		
+	}
+);
+socket.emit('addContentComposedChild',
+	{
+		composed:"IlluminatiIsReal", 
+		name: "Illuminati", 
+		region: "NORTHWEST", 
+		percentage: 0.2
+	}, function (message) { // args are sent in order to acknowledgement function
+		console.log("\nContentComposedChild: "+message);
+	}
+);
+socket.emit('addContentComposedChild',
+	{
+		composed:"IlluminatiIsReal", 
+		name: "Illuminati", 
+		region: "EAST", 
+		percentage: 0.2
+	}, function (message) { // args are sent in order to acknowledgement function
+		console.log("\nContentComposedChild: "+message);
+	}
+);
+socket.emit('addContentComposedChild',
+	{
+		composed:"IlluminatiIsReal", 
+		name: "Illuminati", 
+		region: "SOUTH", 
+		percentage: 0.2
+	}, function (message) { // args are sent in order to acknowledgement function
+		console.log("\nContentComposedChild: "+message);
+	}
+);
+
 
 /*socket.emit('addMovimentConstraint',
 	{
@@ -37,23 +100,6 @@ socket.emit('createContent',
 	}, function (name, data) { // args are sent in order to acknowledgement function
 		console.log("\nMovimentConstraint: "+name);
   		console.log(data);
-	}
-);*/
-
-/*socket.emit('createContentComposed',
-	{
-		name:"CustomSquare",
-		parent:"MyTriangle", 
-		childrens: [
-			{name: "Triangle", region: "North", percentage: 0.7},
-			{name: "Triangle", region: "North", percentage: 0.5}
-		],
-		creator: "client-node"
-	}, function (name, data) { // args are sent in order to acknowledgement function
-		console.log("\nContentCreatedComposed: "+name);
-  		console.log(data);
-  		console.log(JSON.stringify(data, null, 4));
-  		
 	}
 );*/
 
