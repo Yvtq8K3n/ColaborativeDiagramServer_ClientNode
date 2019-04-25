@@ -1,6 +1,6 @@
 //client.js
 var io = require('socket.io-client');
-var socket = io.connect('http://localhost:8080', {reconnect: true});
+var socket = io.connect('http://localhost:9000', {reconnect: true});
 
 // Add a connect listener
 socket.on('connect', function (socket) {
@@ -21,18 +21,18 @@ socket.emit('createContent',
 			{id: 1, x: 0,   y: 1},
 			{id: 2, x: 1,   y: 1}
 		],
-		rotation: 0.5,
+		rotation: 0,
 		creator: "client-node" 
 	}, function (message) { // args are sent in order to acknowledgement function
 		console.log("\nContent: "+message);
 	}
 );
 
-//Create Illuminati Illuminati
+//Create Illuminati
 socket.emit('createContentComposed',
 	{
 		name:"Illuminati",
-		parent:"Triangle", 
+		parent:"MyTriangle", 
 		creator: "client-node"
 	}, function (message) { // args are sent in order to acknowledgement function
 		console.log("\nContentComposed: "+message);  		
@@ -53,7 +53,7 @@ socket.emit('addContentComposedChild',
 socket.emit('createContentComposed',
 	{
 		name:"IlluminatiIsReal",
-		parent:"None", 
+		parent:"Illuminati", 
 		creator: "client-node"
 	}, function (message) { // args are sent in order to acknowledgement function
 		console.log("\nContentComposed: "+message);  		

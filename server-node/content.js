@@ -1,25 +1,17 @@
 /*jshint esversion: 6 */
 
+var ContentBase = require('./contentBase.js');
+
 const ORIGIN = {x:0.5, y:0.5}
 
-class Content {
+class Content extends ContentBase{
+
     constructor(name, points, creator, rotation = 0) {
-        this.name = name;
-        this.type = "basic";
-        this.points = points; 
-        this.creator = creator;
-        this.changed_by = [];
-        this.size = points.length;
+        super(name, "basic", points.length, creator);
+        this.points = points;
 
         //Apply rotation if not 0
         if (rotation != 0) this.rotatePoints(rotation);
-
-        //Adds a log registry 
-        this.changed_by.push({
-            changed_by: creator, 
-            changed_at: new Date(), 
-            summary:"Content was successfully created."
-        });
     }
 
     /*Generates a Regular Polygon based in:
@@ -27,7 +19,7 @@ class Content {
     * @param edge will define the shape triangle - 3, rectangle - 4 
     * @param rotation in radians
     */
-    static generatePolygon(name, edge, rotation) {
+    static generatePolygon(name, edge, rotation, creator = "@SCD") {
         let points = [];
 
         //Based in the amount of edges creates the points
@@ -42,7 +34,7 @@ class Content {
             let newPoint = this.rotatePoint(angle, previous.x , previous.y);
             points.push({id:i, x:newPoint.x, y:newPoint.y});
         }
-        return new Content(name, points, "@SCD", rotation);
+        return new Content(name, points, creator, rotation);
     }
 
     /** Rotates all points
@@ -50,7 +42,7 @@ class Content {
      */
     rotatePoints(rotation) {
         for(let i=0; i < this.points.length; i++){
-            let newPoint = Content.rotatePoint(rotation, this.points[i].x , this.points[i].y);
+            let newPoint = ContentBase.rotatePoint(rotation, this.points[i].x , this.points[i].y);
 
             //Rotate Point
             this.points[i].x = newPoint.x; this.points[i].y = newPoint.y;
@@ -58,34 +50,7 @@ class Content {
     }
 
 
-     /** Utilizes the math property: x′=xcosθ−ysinθ AND y′=ycosθ+xsinθ
-     * in order to calculate the new rotated point position.
-     * However since the point inst (0,0) we need to translate it to it and revert
-     * @param angle Amount of rotation wanted the new point to move
-     * @param px coordinateX of the point that will suffer rotation
-     * @param py coordinateY of the point that will suffer rotation
-     * @return
-     */
-    static rotatePoint(angle, px, py)
-    {
-        let s = Math.sin(angle);
-        let c = Math.cos(angle);
-
-        // translate point back to origin:
-        px -= ORIGIN.x;
-        py -= ORIGIN.y;
-
-        // rotate point
-        let xnew = px * c - py * s;
-        let ynew = px * s + py * c;
-
-        // translate point back:
-        px = xnew + ORIGIN.x;
-        py = ynew + ORIGIN.y;
-
-        return {x: px.toFixed(4), y: py.toFixed(4)};
-    }
-
+     
 
     //A method that delegates moviment to a point
     /*addMovimentConstraint(pointId, movimentType, creator){
@@ -119,4 +84,4 @@ class Content {
     }*/
 }
 
-module.exports = Content;
+module.exports = Content, ContentBase;

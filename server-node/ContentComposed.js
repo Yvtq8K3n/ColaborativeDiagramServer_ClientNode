@@ -1,26 +1,39 @@
 /*jshint esversion: 6 */
+var ContentBase = require('./contentBase.js');
 
-class ContentComposed {
-    constructor(name, parentContent, creator) {
-    	this.name = name;
-        this.type = "composed";
+class ContentComposed extends ContentBase{
+
+    constructor(name, parentContent, creator, rotation = 0) {
+        super(name, "composed", parentContent.size, creator);
         this.parent = parentContent;
-        this.creator = creator;
         this.children = [];
-        this.changed_by = [];
-        this.size = this.parent.points.length;
 
-        //Adds a log registry 
-        this.changed_by.push({
-            changed_by: creator, 
-            changed_at: new Date(), 
-            summary:"Content was successfully created."
-        });
+        //Apply rotation if not 0
+        if (rotation != 0) this.rotatePoints(this.parent, rotation);
+    }
+
+     /** Rotates parent points
+     * @param rotation angle in radians
+     */
+    rotatePoints(content, rotation) {
+        if (content.type=="composed"){
+            this.rotation(content.parent, rotation);
+            return;
+        }
+
+        console.log("name:"+content.name +" points "+content.points);
+        let points = content.points;
+        for(let i=0; i < points.length; i++){
+            let newPoint = ContentBase.rotatePoint(rotation, points[i].x , points[i].y);
+
+            //Rotate Point
+            points[i].x = newPoint.x; points[i].y = newPoint.y;
+        }
     }
 
     //Normal percentage varies betwen 0-1
     addChildren(content, region, percentage, creator){
-        console.log(JSON.stringify(content, null, 4));
+
         //Moves the points to the desired position
         this.shiftPosition(content, region, percentage);
 
@@ -49,7 +62,6 @@ class ContentComposed {
             return;
         }
 
-        console.log(content.name);
         let points = content.points;
         //Converts to the given percentage
         for(let i=0; i< points.length; i++){
@@ -123,4 +135,4 @@ class ContentComposed {
     }*/
 }
 
-module.exports = ContentComposed;
+module.exports = ContentComposed, ContentBase;

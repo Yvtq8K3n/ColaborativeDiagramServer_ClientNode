@@ -1,6 +1,7 @@
 /*jshint esversion: 6 */
 var Content = require('./content.js');
 var ContentComposed = require('./contentComposed.js');
+var ContentBase = require('./contentBase.js');
 
 const MovimentType = ({"V":"vertical", "H":"horizontal", "DA":"diagonalasc", "DD":"diagonaldes", "ANY":"any"});
 
@@ -42,12 +43,9 @@ class Diagram {
         throw "Content already exists";
     }
 
-    createContentComposed(name, parentName, creator){
-        //Retrieve parent
-        let parent = this.retrieveContent(parentName);
-
+    createContentComposed(name, parent, creator, rotation){
         //Create content composed
-        let contentComposed = new ContentComposed(name, parent, creator);
+        let contentComposed = new ContentComposed(name, parent, creator, rotation);
         this.contents.push(contentComposed);
 
         return contentComposed;

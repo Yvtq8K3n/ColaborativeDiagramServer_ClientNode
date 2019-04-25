@@ -4,7 +4,7 @@ var io = require('socket.io')(http);
 var axios=require('axios');
 var Diagram = require('./diagram.js');
 
-http.listen(8080, function () {
+http.listen(9000, function () {
   console.log('listening on *:8080');
 });
 
@@ -48,8 +48,10 @@ io.on('connection', function (socket){
     });
     socket.on('createContentComposed', function (data, fn) {
     	try{
-    		//
-    		let content = classDiagram.createContentComposed(data.name, data.parent, data.creator);
+    		//Retrieve Parent
+    		let parent = classDiagram.retrieveContent(data.parent);
+        	let clonedParent = JSON.parse(JSON.stringify(parent));
+        	let content = classDiagram.createContentComposed(data.name, clonedParent, data.creator, data.rotation);
 
 	        //Notify message
 	        fn(data.name+": Content was created ");
