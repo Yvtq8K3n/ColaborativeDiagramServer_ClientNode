@@ -34,9 +34,17 @@ class Diagram {
             this.retrieveContent(obj.name);
 
         }catch(err) {
-            //Create object
-            let content = new Content(obj.name, obj.points, creator, obj.rotation);
-            this.contents.push(content);
+        	let content;
+        	if (typeof obj.points != "undefined"){
+	            //Create object
+	            content = new Content(obj.name, obj.points, creator, obj.rotation);
+	            this.contents.push(content);
+	        } else if (typeof obj.edge != "undefined"){
+	        	//Create object
+	            content = Content.generatePolygon(obj.name, obj.edge, obj.rotation, obj.creator);
+	            this.contents.push(content);
+	        }
+
 
             return content;
         }
