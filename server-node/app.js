@@ -37,10 +37,10 @@ io.on('connection', function (socket){
     		let content = classDiagram.createContent(data, data.creator);
 
 	    	//Notify message
-	   		fn(data.name+": Content was created ");
+	   		fn(data.name+": Content was created ", content);
 
-	   		//Notify all changes
-	   		io.sockets.emit('contentCreated', content);
+	   		//Notify to all other clients
+	   		socket.broadcast.emit('contentCreated', content);
     	}catch(err) {
 		  	//Notify error
 	   		fn(data.name+": "+err);
@@ -54,10 +54,10 @@ io.on('connection', function (socket){
         	let content = classDiagram.createContentComposed(data.name, clonedParent, data.creator, data.rotation);
 
 	        //Notify message
-	        fn(data.name+": Content was created ");
+	        fn(data.name+": Content was created ", content);
 
-	   		//Notify all changes
-	   		io.sockets.emit('contentCreated', content);
+	   		//Notify to all other clients
+	   		socket.broadcast.emit('contentCreated', content);
     	}catch(err) {
 		  	//Notify error
 	   		fn(data.name+": "+err);
@@ -76,7 +76,7 @@ io.on('connection', function (socket){
 	        //Notify message
 	        fn(data.name+" was added to content "+data.composed);
 
-	   		//Notify all changes
+	   		//Notify to all clients
 	   		io.sockets.emit('contentChildAdded', {content: content, childId: childId});
     	}catch(err) {
 		  	//Notify error
