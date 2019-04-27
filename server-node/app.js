@@ -42,8 +42,10 @@ io.on('connection', function (socket){
 	   		//Notify to all other clients
 	   		socket.broadcast.emit('contentCreated', content);
     	}catch(err) {
+    		console.log("Error");
+    		console.log(err);
 		  	//Notify error
-	   		fn(data.name+": "+err);
+	   		//fn(data.name+": "+err);
 		}   		
     });
     socket.on('createContentComposed', function (data, fn) {
