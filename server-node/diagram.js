@@ -2,8 +2,7 @@
 var Content = require('./content.js');
 var ContentComposed = require('./contentComposed.js');
 var ContentBase = require('./contentBase.js');
-
-const MovimentType = ({"V":"vertical", "H":"horizontal", "DA":"diagonalasc", "DD":"diagonaldes", "ANY":"any"});
+var Selector = require('./selector.js');
 
 class Diagram {
 
@@ -11,7 +10,9 @@ class Diagram {
         this.diagramId = name;
         this.creator = creator;
         this.contents = [];
+        this.selectors = [];
         this.generateDefaultContents();
+        this.generateDefaultSelectors();
     }
 
     generateDefaultContents(){
@@ -26,6 +27,15 @@ class Diagram {
         //Adds Contents
         this.contents.push(none, triangle);
         this.contents.push(rhombus, square, pentagon, hexagon);
+    }
+
+    generateDefaultSelectors(){
+        //Generate Selectors
+        let none = new Selector("None");
+        let defaultSelector = this.createSelector("Default", this.retrieveContent("Square"), 4);
+
+        //Add Selectors
+        this.selectors.push(none, defaultSelector);
     }
 
     createContent(obj, creator){
@@ -68,6 +78,17 @@ class Diagram {
         throw "Content not found";
     }
 
+    createSelector(name, content, amount, creator = "@SCD"){
+        if (amount % 2 != 0) throw "The amount of selectorPoints must be even";
+
+        let selector = new Selector(name, creator);
+        console.log("heyhey");
+        selector.addSelectorPoints(content, amount, creator);
+        console.log("heyhey");
+
+        return selector;
+    }
+
     asdsa(){
         //Creates an triangle that can move its top vertice
         //let triangle = Shape.generate("Triangle", 3);
@@ -94,4 +115,4 @@ class Diagram {
     }
 }
 
-module.exports = Diagram, MovimentType;
+module.exports = Diagram;

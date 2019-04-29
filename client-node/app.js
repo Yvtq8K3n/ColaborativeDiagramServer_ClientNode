@@ -91,6 +91,18 @@ socket.emit('addContentComposedChild',
 );
 
 
+socket.emit('createSelector',
+	{
+		name: "MySelector", 
+		content: "Square", 
+		amount: 7,
+		creator: "Yvtq8k3n"
+	}, function (message, data) { // args are sent in order to acknowledgement function
+		console.log("\n"+message +" Data:"+ data);
+	}
+);
+
+
 /*socket.emit('addMovimentConstraint',
 	{
 		name:"MyTriangle",

@@ -8,15 +8,20 @@ http.listen(9000, function () {
   console.log('listening on *:8080');
 });
 
+//Constants
+const Region = Object.freeze({
+    "NORTH":{x: 0.5, y:0}, "SOUTH":{x: 0.5, y:1}, 
+    "WEST":{x: 0, y:0.5}, "EAST":{x: 1, y:0.5},
+    "NORTHWEST":{x: 0, y:0}, "NORTHEAST":{x: 1, y:0},
+    "SOUTHWEST":{x: 0, y:1}, "SOUTHEAST":{x: 1, y:1},
+    "CENTER":{x: 0.5, y: 0.5}
+});
 
+//const MovimentType = Object.freeze({{"V":"vertical", "H":"horizontal", "DA":"diagonalasc", "DD":"diagonaldes", "ANY":"any"});
+function getKeyByValue(object, value) {
+   return Object.keys(object).find(key => object[key] === value);
+}
 
-var Region = Object.freeze({
-        "NORTH":{x: 0.5, y:0}, "SOUTH":{x: 0.5, y:1}, 
-        "WEST":{x: 0, y:0.5}, "EAST":{x: 1, y:0.5},
-        "NORTHWEST":{x: 0, y:0}, "NORTHEAST":{x: 1, y:0},
-        "SOUTHWEST":{x: 0, y:1}, "SOUTHEAST":{x: 1, y:1},
-        "CENTER":{x: 0.5, y: 0.5}
-    });
 
 //Create diagram
 let classDiagram = new Diagram("ClassDiagram", "Yvtq8k3n");
@@ -86,11 +91,6 @@ io.on('connection', function (socket){
 		}   	
     });
 
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// Elements																             		  ///
-    /////////////////////////////////////////////////////////////////////////////////////////////////////
-    
     /*
     socket.on('addMovimentConstraint', function (data, fn) {
    		let contents = classDiagram.getContents();
@@ -106,6 +106,37 @@ io.on('connection', function (socket){
             }
         }    
     });*/
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// Selectors																             		  ///
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+     socket.on('createSelector', function (data, fn) {
+    	try{
+	     	//Retrieve Content
+	     	let content = classDiagram.retrieveContent(data.content);
+
+		    //Create Selector
+		    let selector = classDiagram.createSelector(data.name, content, data.amount, data.creator);
+
+	        //Notify message
+	        fn(data.name+": Selector was created", selector);
+
+	   		//Notify to all clients
+	   		io.sockets.emit('selectorCreated', selector);
+    	}catch(err) {
+		  	//Notify error
+	   		fn(data.name+": "+err);
+		}   	
+    });
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// Elements																             		  ///
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  
+    
+    
 
      socket.on('disconnect', function () {
        console.log('user disconnected');
