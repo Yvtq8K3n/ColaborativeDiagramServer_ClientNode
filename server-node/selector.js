@@ -23,6 +23,9 @@ const Orientation  = Object.freeze({
 
 class Selector {
     constructor(name, creator = "@SCD") {
+    	this.name = name;
+
+    	this.corners = [];
         this.north = [];
         this.south = [];
         this.west = [];
@@ -39,22 +42,29 @@ class Selector {
     }
 
     //Adds to the selector
-    addSelectorPoints(content, amount, creator){
+    addSelectorPoints(content, amount, creator, corners = false){
+    	if (corners) {
+    		this.addSelectorPoint(this.corners, "NORTHWEST", content, creator);
+    		this.addSelectorPoint(this.corners, "NORTHEAST", content, creator);
+    		this.addSelectorPoint(this.corners, "SOUTHWEST", content, creator);
+    	    this.addSelectorPoint(this.corners, "SOUTHEAST", content, creator);
+    	}
+
     	for(let i = 0; i< amount; i++){
     		let region = RegionName[i%4];
 
     		switch(region){
     			case "NORTH":
-    				this.addSelectorPoint(this.north, Region[region], content, creator);
+    				this.addSelectorPoint(this.north, region, content, creator);
     			break;
     			case "SOUTH":
-    				this.addSelectorPoint(this.south, Region[region], content, creator);
+    				this.addSelectorPoint(this.south, region, content, creator);
     			break;
     			case "WEST":
-    				this.addSelectorPoint(this.west,  Region[region], content, creator);
+    				this.addSelectorPoint(this.west,  region, content, creator);
     			break;
     			case "EAST":
-    				this.addSelectorPoint(this.east,  Region[region], content, creator);
+    				this.addSelectorPoint(this.east,  region, content, creator);
     			break;
     		}    	
     	}
@@ -62,17 +72,18 @@ class Selector {
 
     addSelectorPoint(area, region, content, creator){
     	let size = area.length + 1;
+    	let regionPoint = Region[region];
 
     	//Change existing ones
     	for(let i = 1; i <= area.length; i++){
     		let selectPoint = area[i-1];
-    		if (region.x == 0.5) selectPoint.x = i / (size + 1);
-    		if (region.y == 0.5) selectPoint.y = i / (size + 1);
+    		if (regionPoint.x == 0.5) selectPoint.x = i / (size + 1);
+    		if (regionPoint.y == 0.5) selectPoint.y = i / (size + 1);
     	}
 
     	//Add new one
-    	let x = region.x == 0.5 ? size/(size + 1) : region.x;
-    	let y = region.y == 0.5 ? size/(size + 1) : region.y; 
+    	let x = regionPoint.x == 0.5 ? size/(size + 1) : regionPoint.x;
+    	let y = regionPoint.y == 0.5 ? size/(size + 1) : regionPoint.y; 
     		
     	let selectPoint = new SelectPoint(this.size, x, y, content, Orientation[region], creator);
     	area.push(selectPoint);
@@ -86,6 +97,37 @@ class Selector {
 
         //Adds to a point to the counter
     	this.size++;
+    }
+
+    getSelectorPoint(id){
+    	let selectorPoint = null;
+
+        //Retrieve SelectorPoint on Corners
+		this.corners.forEach((element) => {
+		    if (element.id == id) selectorPoint = element;
+		});
+
+    	//Retrieve SelectorPoint on North
+		this.north.forEach((element) => {
+		    if (element.id == id) selectorPoint = element;
+		});
+
+    	//Retrieve SelectorPoint on South
+		this.south.forEach((element) => {
+		    if (element.id == id) selectorPoint = element;
+		});
+
+		//Retrieve SelectorPoint on West
+		this.west.forEach((element) => {
+		    if (element.id == id) selectorPoint = element;
+		});
+
+		//Retrieve SelectorPoint on East
+		this.east.forEach((element) => {
+		    if (element.id == id) selectorPoint = element;
+		});
+
+		return selectorPoint;
     }
 }
 

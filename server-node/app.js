@@ -31,8 +31,9 @@ io.on('connection', function (socket){
     console.log('A new connection was created on socket:', socket.id);
 
     //Sending Diagram Contents
-    console.log("Sending the latest contents!");
+    console.log("Sending the latest data!(Content, Selectors...)\n");
     socket.emit('contents', classDiagram.getContents());
+    socket.emit('selectors', classDiagram.getSelectors());
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     /// Contents 																             		  ///
@@ -43,6 +44,7 @@ io.on('connection', function (socket){
 
 	    	//Notify message
 	   		fn(data.name+": Content was created ", content);
+	   		console.log(data.creator +" created Content:"+data.name);
 
 	   		//Notify all other clients
 	   		socket.broadcast.emit('contentCreated', content);
@@ -62,6 +64,7 @@ io.on('connection', function (socket){
 
 	        //Notify message
 	        fn(data.name+": Content was created ", content);
+	        console.log(data.creator +" created ContentComposed:"+data.name);
 
 	   		//Notify all other clients
 	   		socket.broadcast.emit('contentCreated', content);
@@ -82,6 +85,7 @@ io.on('connection', function (socket){
 
 	        //Notify message
 	        fn(data.name+" was added to content "+data.composed);
+	        console.log(data.creator +" added as child:"+data.name+" to ContentComposed:"+content.name);
 
 	   		//Notify all clients
 	   		io.sockets.emit('contentChildAdded', {content: content, childId: childId});
@@ -110,16 +114,42 @@ io.on('connection', function (socket){
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     /// Selectors																             		  ///
     /////////////////////////////////////////////////////////////////////////////////////////////////////
-     socket.on('createSelector', function (data, fn) {
+    socket.on('createSelector', function (data, fn) {
     	try{
 	     	//Retrieve Content
 	     	let content = classDiagram.retrieveContent(data.content);
 
 		    //Create Selector
-		    let selector = classDiagram.createSelector(data.name, content, data.amount, data.creator);
+		    let selector = classDiagram.createSelector(data.name, content, data.amount, data.corners, data.creator);
 
 	        //Notify message
 	        fn(data.name+": Selector was created", selector);
+	        console.log(data.creator +" created a Selector:"+data.name);
+
+	   		//Notify all other clients
+	   		io.sockets.emit('selectorCreated', selector);
+    	}catch(err) {
+		  	//Notify error
+	   		fn(data.name+": "+err);
+		}   	
+    });
+    //Só pode ser possivel se o selector possui um element. Um elemento tem uma instancia de um selector.
+    socket.on('moveSelector', function (data, fn) {
+    	try{
+
+	     	//Retrieve Selector/Deveria fazer retrieve do selector do element invez disto
+	     	let selector = classDiagram.retrieveSelector(data.name);
+
+		    //Retrieve point
+		    let selectorPoint = selector.getSelectorPoint(data.id);
+
+		    //Move 
+		    if (typeof data.amount !== "undefined") selectorPoint.move(data.amount);
+		    else if (typeof data.point !== "undefined") selectorPoint.moveToPoint(data.point);
+
+	        //Notify message
+	        fn(data.name+": Selection Point "+data.id+" was moved");
+	        console.log("Selection Point "+data.id+" was moved on Element:");
 
 	   		//Notify all other clients
 	   		io.sockets.emit('selectorCreated', selector);

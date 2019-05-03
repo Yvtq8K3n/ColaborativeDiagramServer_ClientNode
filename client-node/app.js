@@ -23,8 +23,8 @@ socket.emit('createContent',
 		],
 		rotation: 0,
 		creator: "client-node" 
-	}, function (message) { // args are sent in order to acknowledgement function
-		console.log("\nContent: "+message);
+	}, function (message, data) { // args are sent in order to acknowledgement function
+		console.log("\nContent: "+message, data);
 	}
 );
 
@@ -34,8 +34,8 @@ socket.emit('createContentComposed',
 		name:"Illuminati",
 		parent:"MyTriangle", 
 		creator: "client-node"
-	}, function (message) { // args are sent in order to acknowledgement function
-		console.log("\nContentComposed: "+message);  		
+	}, function (message, data) { // args are sent in order to acknowledgement function
+		console.log("\nContentComposed: "+message, data);  		
 	}
 );
 socket.emit('addContentComposedChild',
@@ -43,7 +43,8 @@ socket.emit('addContentComposedChild',
 		composed:"Illuminati",
 		name: "Hexagon", 
 		region: "NORTH", 
-		percentage: 0.4
+		percentage: 0.4,
+		creator: "client-node"
 	}, function (message) { // args are sent in order to acknowledgement function
 		console.log("\nContentComposedChild: "+message);
 	}
@@ -55,7 +56,7 @@ socket.emit('createContentComposed',
 		name:"IlluminatiIsReal",
 		parent:"Illuminati", 
 		creator: "client-node"
-	}, function (message) { // args are sent in order to acknowledgement function
+	}, function (message, data) { // args are sent in order to acknowledgement function
 		console.log("\nContentComposed: "+message, data);  		
 	}
 );
@@ -64,9 +65,10 @@ socket.emit('addContentComposedChild',
 		composed:"IlluminatiIsReal", 
 		name: "Illuminati", 
 		region: "NORTHWEST", 
-		percentage: 0.2
+		percentage: 0.2,
+		creator: "client-node"
 	}, function (message) { // args are sent in order to acknowledgement function
-		console.log("\nContentComposedChild: "+message, data);
+		console.log("\nContentComposedChild: "+message);
 	}
 );
 socket.emit('addContentComposedChild',
@@ -74,9 +76,10 @@ socket.emit('addContentComposedChild',
 		composed:"IlluminatiIsReal", 
 		name: "Illuminati", 
 		region: "EAST", 
-		percentage: 0.2
+		percentage: 0.2,
+		creator: "client-node"
 	}, function (message) { // args are sent in order to acknowledgement function
-		console.log("\nContentComposedChild: "+message, data);
+		console.log("\nContentComposedChild: "+message);
 	}
 );
 socket.emit('addContentComposedChild',
@@ -84,9 +87,10 @@ socket.emit('addContentComposedChild',
 		composed:"IlluminatiIsReal", 
 		name: "Illuminati", 
 		region: "SOUTH", 
-		percentage: 0.2
+		percentage: 0.2,
+		creator: "client-node"
 	}, function (message) { // args are sent in order to acknowledgement function
-		console.log("\nContentComposedChild: "+message, data);
+		console.log("\nContentComposedChild: "+message);
 	}
 );
 
@@ -95,12 +99,37 @@ socket.emit('createSelector',
 	{
 		name: "MySelector", 
 		content: "Square", 
-		amount: 7,
-		creator: "Yvtq8k3n"
+		amount: 8,
+		corners: true,
+		creator: "client-node"
 	}, function (message, data) { // args are sent in order to acknowledgement function
-		console.log("\n"+message +" Data:"+ data);
+		console.log("\Selector: "+message, data);
 	}
 );
+
+socket.emit('moveSelector',
+	{
+		name: "MySelector", 
+		id: 0, 
+		amount: 20,
+		creator: "Yvtq8k3n"
+	}, function (message) { // args are sent in order to acknowledgement function
+		console.log("\n"+message);
+	}
+);
+
+socket.emit('createSelector',
+	{
+		name: "2SimpleSelector", 
+		content: "Square", 
+		amount: 2,
+		corners: false,
+		creator: "client-node"
+	}, function (message, data) { // args are sent in order to acknowledgement function
+		console.log("\Selector: "+message, data);
+	}
+);
+
 
 
 /*socket.emit('addMovimentConstraint',

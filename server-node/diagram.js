@@ -69,6 +69,16 @@ class Diagram {
         return contentComposed;
     }
 
+    createSelector(name, content, amount, corners, creator = "@SCD"){
+        if (amount % 2 != 0) throw "The amount of selectorPoints must be even";
+
+        let selector = new Selector(name, creator);
+        selector.addSelectorPoints(content, amount, creator, corners);;
+        this.selectors.push(selector);
+        
+        return selector;
+    }
+
     retrieveContent(name){
         for(var i = 0; i < this.contents.length; i++) {
             if (this.contents[i].name == name) {
@@ -78,15 +88,13 @@ class Diagram {
         throw "Content not found";
     }
 
-    createSelector(name, content, amount, creator = "@SCD"){
-        if (amount % 2 != 0) throw "The amount of selectorPoints must be even";
-
-        let selector = new Selector(name, creator);
-        console.log("heyhey");
-        selector.addSelectorPoints(content, amount, creator);
-        console.log("heyhey");
-
-        return selector;
+    retrieveSelector(name){
+        for(var i = 0; i < this.selectors.length; i++) {
+            if (this.selectors[i].name == name) {
+                return this.selectors[i];
+            }
+        }
+        throw "Selector not found";
     }
 
     asdsa(){
@@ -112,6 +120,10 @@ class Diagram {
 
     getContents(){
         return this.contents;
+    }
+
+    getSelectors(){
+        return this.selectors;
     }
 }
 
