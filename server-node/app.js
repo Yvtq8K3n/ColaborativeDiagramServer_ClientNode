@@ -44,7 +44,7 @@ io.on('connection', function (socket){
 	    	//Notify message
 	   		fn(data.name+": Content was created ", content);
 
-	   		//Notify to all other clients
+	   		//Notify all other clients
 	   		socket.broadcast.emit('contentCreated', content);
     	}catch(err) {
     		console.log("Error");
@@ -63,7 +63,7 @@ io.on('connection', function (socket){
 	        //Notify message
 	        fn(data.name+": Content was created ", content);
 
-	   		//Notify to all other clients
+	   		//Notify all other clients
 	   		socket.broadcast.emit('contentCreated', content);
     	}catch(err) {
 		  	//Notify error
@@ -83,7 +83,7 @@ io.on('connection', function (socket){
 	        //Notify message
 	        fn(data.name+" was added to content "+data.composed);
 
-	   		//Notify to all clients
+	   		//Notify all clients
 	   		io.sockets.emit('contentChildAdded', {content: content, childId: childId});
     	}catch(err) {
 		  	//Notify error
@@ -121,7 +121,7 @@ io.on('connection', function (socket){
 	        //Notify message
 	        fn(data.name+": Selector was created", selector);
 
-	   		//Notify to all clients
+	   		//Notify all other clients
 	   		io.sockets.emit('selectorCreated', selector);
     	}catch(err) {
 		  	//Notify error

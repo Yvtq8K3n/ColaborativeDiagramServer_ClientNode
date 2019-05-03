@@ -56,7 +56,7 @@ socket.emit('createContentComposed',
 		parent:"Illuminati", 
 		creator: "client-node"
 	}, function (message) { // args are sent in order to acknowledgement function
-		console.log("\nContentComposed: "+message);  		
+		console.log("\nContentComposed: "+message, data);  		
 	}
 );
 socket.emit('addContentComposedChild',
@@ -66,7 +66,7 @@ socket.emit('addContentComposedChild',
 		region: "NORTHWEST", 
 		percentage: 0.2
 	}, function (message) { // args are sent in order to acknowledgement function
-		console.log("\nContentComposedChild: "+message);
+		console.log("\nContentComposedChild: "+message, data);
 	}
 );
 socket.emit('addContentComposedChild',
@@ -76,7 +76,7 @@ socket.emit('addContentComposedChild',
 		region: "EAST", 
 		percentage: 0.2
 	}, function (message) { // args are sent in order to acknowledgement function
-		console.log("\nContentComposedChild: "+message);
+		console.log("\nContentComposedChild: "+message, data);
 	}
 );
 socket.emit('addContentComposedChild',
@@ -86,7 +86,7 @@ socket.emit('addContentComposedChild',
 		region: "SOUTH", 
 		percentage: 0.2
 	}, function (message) { // args are sent in order to acknowledgement function
-		console.log("\nContentComposedChild: "+message);
+		console.log("\nContentComposedChild: "+message, data);
 	}
 );
 
