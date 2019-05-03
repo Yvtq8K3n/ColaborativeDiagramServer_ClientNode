@@ -118,6 +118,17 @@ socket.emit('moveSelector',
 	}
 );
 
+socket.emit('moveSelector',
+	{
+		name: "MySelector", 
+		id: 2, 
+		point: {x: 50, y:100},
+		creator: "Yvtq8k3n"
+	}, function (message) { // args are sent in order to acknowledgement function
+		console.log("\n"+message);
+	}
+);
+
 socket.emit('createSelector',
 	{
 		name: "2SimpleSelector", 
