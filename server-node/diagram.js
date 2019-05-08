@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
-var Content = require('./content.js');
-var ContentComposed = require('./contentComposed.js');
-var ContentBase = require('./contentBase.js');
+var Representation = require('./representation.js');
+var RepresentationSimple = require('./Representation.Simple.js');
+var RepresentationComposed = require('./Representation.Composed.js');
 var Selector = require('./selector.js');
 
 class Diagram {
@@ -9,83 +9,83 @@ class Diagram {
     constructor(name, creator) {
         this.diagramId = name;
         this.creator = creator;
-        this.contents = [];
+        this.representations = [];
         this.selectors = [];
-        this.generateDefaultContents();
+        this.generateDefaultRepresentations();
         this.generateDefaultSelectors();
     }
 
-    generateDefaultContents(){
-        //Generate Contents
-        let none = Content.generatePolygon("None", 0);
-        let triangle = Content.generatePolygon("Triangle", 3);
-        let square   = Content.generatePolygon("Square", 4, Math.PI/4);
-        let rhombus  = Content.generatePolygon("Rhombus", 4);
-        let pentagon = Content.generatePolygon("Pentagon", 5);
-        let hexagon  = Content.generatePolygon("Hexagon", 6);
+    generateDefaultRepresentations(){
+        //Generate representations
+        let none     = RepresentationSimple.generatePolygon("None", 0);
+        let triangle = RepresentationSimple.generatePolygon("Triangle", 3);
+        let square   = RepresentationSimple.generatePolygon("Square", 4, Math.PI/4);
+        let rhombus  = RepresentationSimple.generatePolygon("Rhombus", 4);
+        let pentagon = RepresentationSimple.generatePolygon("Pentagon", 5);
+        let hexagon  = RepresentationSimple.generatePolygon("Hexagon", 6);
 
-        //Adds Contents
-        this.contents.push(none, triangle);
-        this.contents.push(rhombus, square, pentagon, hexagon);
+        //Adds representations
+        this.representations.push(none, triangle);
+        this.representations.push(rhombus, square, pentagon, hexagon);
     }
 
     generateDefaultSelectors(){
         //Generate Selectors
         let none = new Selector("None");
-        let defaultSelector = this.createSelector("Default", this.retrieveContent("Square"), 4);
+        let defaultSelector = this.createSelector("Default", this.retrieveRepresentation("Square"), 4);
 
         //Add Selectors
         this.selectors.push(none, defaultSelector);
     }
 
-    createContent(obj, creator){
+    createRepresentationSimple(obj, creator){
         try{
             //Check if object doenst exist
-            this.retrieveContent(obj.name);
+            this.retrieveRepresentation(obj.name);
 
         }catch(err) {
-        	let content;
+        	let representation;
         	if (typeof obj.points != "undefined"){
 	            //Create object
-	            content = new Content(obj.name, obj.points, creator, obj.rotation);
-	            this.contents.push(content);
+	            representation = new RepresentationSimple(obj.name, obj.points, creator, obj.rotation);
+	            this.representations.push(representation);
 	        } else if (typeof obj.edge != "undefined"){
 	        	//Create object
-	            content = Content.generatePolygon(obj.name, obj.edge, obj.rotation, obj.creator);
-	            this.contents.push(content);
+	            representation = RepresentationSimple.generatePolygon(obj.name, obj.edge, obj.rotation, obj.creator);
+	            this.representations.push(representation);
 	        }
 
 
-            return content;
+            return representation;
         }
-        throw "Content already exists";
+        throw "representation already exists";
     }
 
-    createContentComposed(name, parent, creator, rotation){
-        //Create content composed
-        let contentComposed = new ContentComposed(name, parent, creator, rotation);
-        this.contents.push(contentComposed);
+    createRepresentationComposed(name, parent, creator, rotation){
+        //Create representation composed
+        let representationComposed = new RepresentationComposed(name, parent, creator, rotation);
+        this.representations.push(representationComposed);
 
-        return contentComposed;
+        return representationComposed;
     }
 
-    createSelector(name, content, amount, corners, creator = "@SCD"){
+    createSelector(name, representation, amount, corners, creator = "@SCD"){
         if (amount % 2 != 0) throw "The amount of selectorPoints must be even";
 
         let selector = new Selector(name, creator);
-        selector.addSelectorPoints(content, amount, creator, corners);;
+        selector.addSelectorPoints(representation, amount, creator, corners);;
         this.selectors.push(selector);
         
         return selector;
     }
 
-    retrieveContent(name){
-        for(var i = 0; i < this.contents.length; i++) {
-            if (this.contents[i].name == name) {
-                return this.contents[i];
+    retrieveRepresentation(name){
+        for(var i = 0; i < this.representations.length; i++) {
+            if (this.representations[i].name == name) {
+                return this.representations[i];
             }
         }
-        throw "Content not found";
+        throw "representation not found";
     }
 
     retrieveSelector(name){
@@ -114,12 +114,8 @@ class Diagram {
         triangleArrow.addMovimentRelativeConstraint(1, 0, MovimentType.V);*/
     }
 
-    getShapes(){
-        return this.shapes;
-    }
-
-    getContents(){
-        return this.contents;
+    getRepresentations(){
+        return this.representations;
     }
 
     getSelectors(){

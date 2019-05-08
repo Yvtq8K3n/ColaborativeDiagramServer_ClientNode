@@ -30,24 +30,24 @@ let classDiagram = new Diagram("ClassDiagram", "Yvtq8k3n");
 io.on('connection', function (socket){
     console.log('A new connection was created on socket:', socket.id);
 
-    //Sending Diagram Contents
-    console.log("Sending the latest data!(Content, Selectors...)\n");
-    socket.emit('contents', classDiagram.getContents());
+    //Sending Diagram representations
+    console.log("Sending the latest data!(Representations, Selectors...)\n");
+    socket.emit('representations', classDiagram.getRepresentations());
     socket.emit('selectors', classDiagram.getSelectors());
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// Contents 																             		  ///
+    /// representations 																             		  ///
     /////////////////////////////////////////////////////////////////////////////////////////////////////
-    socket.on('createContent', function (data, fn) {
+    socket.on('createRepresentationSimple', function (data, fn) {
     	try{
-    		let content = classDiagram.createContent(data, data.creator);
+    		let representation = classDiagram.createRepresentationSimple(data, data.creator);
 
 	    	//Notify message
-	   		fn(data.name+": Content was created ", content);
-	   		console.log(data.creator +" created Content:"+data.name);
+	   		fn(data.name+": representation was created ", representation);
+	   		console.log(data.creator +" created representation simples:"+data.name);
 
 	   		//Notify all other clients
-	   		socket.broadcast.emit('contentCreated', content);
+	   		socket.broadcast.emit('representationCreated', representation);
     	}catch(err) {
     		console.log("Error");
     		console.log(err);
@@ -55,40 +55,40 @@ io.on('connection', function (socket){
 	   		//fn(data.name+": "+err);
 		}   		
     });
-    socket.on('createContentComposed', function (data, fn) {
+    socket.on('createRepresentationComposed', function (data, fn) {
     	try{
     		//Retrieve Parent
-    		let parent = classDiagram.retrieveContent(data.parent);
+    		let parent = classDiagram.retrieveRepresentation(data.parent);
         	let clonedParent = JSON.parse(JSON.stringify(parent));
-        	let content = classDiagram.createContentComposed(data.name, clonedParent, data.creator, data.rotation);
+        	let representation = classDiagram.createRepresentationComposed(data.name, clonedParent, data.creator, data.rotation);
 
 	        //Notify message
-	        fn(data.name+": Content was created ", content);
-	        console.log(data.creator +" created ContentComposed:"+data.name);
+	        fn(data.name+": representation was created ", representation);
+	        console.log(data.creator +" created representation composed:"+data.name);
 
 	   		//Notify all other clients
-	   		socket.broadcast.emit('contentCreated', content);
+	   		socket.broadcast.emit('representationCreated', representation);
     	}catch(err) {
 		  	//Notify error
 	   		fn(data.name+": "+err);
 		}   	
     });
-    socket.on('addContentComposedChild', function (data, fn) {
+    socket.on('addRepresentationComposedChild', function (data, fn) {
     	try{
-	     	//Retrieve ContentComposed
-	     	let content = classDiagram.retrieveContent(data.composed);
+	     	//Retrieve representationComposed
+	     	let representation = classDiagram.retrieveRepresentation(data.composed);
 
 	     	//Retrieve Child
-        	let child = classDiagram.retrieveContent(data.name);
+        	let child = classDiagram.retrieveRepresentation(data.name);
 	        let clonedChild = JSON.parse(JSON.stringify(child));
-        	let childId = content.addChildren(clonedChild, Region[data.region], data.percentage, data.creator);
+        	let childId = representation.addChildren(clonedChild, Region[data.region], data.percentage, data.creator);
 
 	        //Notify message
-	        fn(data.name+" was added to content "+data.composed);
-	        console.log(data.creator +" added as child:"+data.name+" to ContentComposed:"+content.name);
+	        fn(data.name+" was added to representation "+data.composed);
+	        console.log(data.creator +" added as child:"+data.name+" to representationComposed:"+representation.name);
 
 	   		//Notify all clients
-	   		io.sockets.emit('contentChildAdded', {content: content, childId: childId});
+	   		io.sockets.emit('representationChildAdded', {representation: representation, childId: childId});
     	}catch(err) {
 		  	//Notify error
 	   		fn(data.composed+": "+err);
@@ -97,15 +97,15 @@ io.on('connection', function (socket){
 
     /*
     socket.on('addMovimentConstraint', function (data, fn) {
-   		let contents = classDiagram.getContents();
+   		let representations = classDiagram.getrepresentations();
 
-   		for(var i = 0; i < contents.length; i++) {
-            if (contents[i].name == data.name) {
-            	let content = contents[i];
-                content.addMovimentConstraint(data.pointId, data.moviment, data.creator);
+   		for(var i = 0; i < representations.length; i++) {
+            if (representations[i].name == data.name) {
+            	let representation = representations[i];
+                representation.addMovimentConstraint(data.pointId, data.moviment, data.creator);
           		
           		//Returns the operation
-                fn(content.name, content.changed_by[content.changed_by.length-1]);
+                fn(representation.name, representation.changed_by[representation.changed_by.length-1]);
             	break;
             }
         }    
@@ -116,11 +116,11 @@ io.on('connection', function (socket){
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     socket.on('createSelector', function (data, fn) {
     	try{
-	     	//Retrieve Content
-	     	let content = classDiagram.retrieveContent(data.content);
+	     	//Retrieve representation
+	     	let representation = classDiagram.retrieveRepresentation(data.representation);
 
 		    //Create Selector
-		    let selector = classDiagram.createSelector(data.name, content, data.amount, data.corners, data.creator);
+		    let selector = classDiagram.createSelector(data.name, representation, data.amount, data.corners, data.creator);
 
 	        //Notify message
 	        fn(data.name+": Selector was created", selector);

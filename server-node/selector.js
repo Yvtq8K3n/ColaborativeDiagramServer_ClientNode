@@ -37,17 +37,17 @@ class Selector {
         this.changed_by.push({
             changed_by: creator, 
             changed_at: new Date(), 
-            summary:"Content was successfully created."
+            summary:"representation was successfully created."
         });
     }
 
     //Adds to the selector
-    addSelectorPoints(content, amount, creator, corners = false){
+    addSelectorPoints(representation, amount, creator, corners = false){
     	if (corners) {
-    		this.addSelectorPoint(this.corners, "NORTHWEST", content, creator);
-    		this.addSelectorPoint(this.corners, "NORTHEAST", content, creator);
-    		this.addSelectorPoint(this.corners, "SOUTHWEST", content, creator);
-    	    this.addSelectorPoint(this.corners, "SOUTHEAST", content, creator);
+    		this.addSelectorPoint(this.corners, "NORTHWEST", representation, creator);
+    		this.addSelectorPoint(this.corners, "NORTHEAST", representation, creator);
+    		this.addSelectorPoint(this.corners, "SOUTHWEST", representation, creator);
+    	    this.addSelectorPoint(this.corners, "SOUTHEAST", representation, creator);
     	}
 
     	for(let i = 0; i< amount; i++){
@@ -55,22 +55,22 @@ class Selector {
 
     		switch(region){
     			case "NORTH":
-    				this.addSelectorPoint(this.north, region, content, creator);
+    				this.addSelectorPoint(this.north, region, representation, creator);
     			break;
     			case "SOUTH":
-    				this.addSelectorPoint(this.south, region, content, creator);
+    				this.addSelectorPoint(this.south, region, representation, creator);
     			break;
     			case "WEST":
-    				this.addSelectorPoint(this.west,  region, content, creator);
+    				this.addSelectorPoint(this.west,  region, representation, creator);
     			break;
     			case "EAST":
-    				this.addSelectorPoint(this.east,  region, content, creator);
+    				this.addSelectorPoint(this.east,  region, representation, creator);
     			break;
     		}    	
     	}
 	}
 
-    addSelectorPoint(area, region, content, creator){
+    addSelectorPoint(area, region, representation, creator){
     	let size = area.length + 1;
     	let regionPoint = Region[region];
 
@@ -85,7 +85,7 @@ class Selector {
     	let x = regionPoint.x == 0.5 ? size/(size + 1) : regionPoint.x;
     	let y = regionPoint.y == 0.5 ? size/(size + 1) : regionPoint.y; 
     		
-    	let selectPoint = new SelectPoint(this.size, x, y, content, Orientation[region], creator);
+    	let selectPoint = new SelectPoint(this.size, x, y, representation, Orientation[region], creator);
     	area.push(selectPoint);
 
     	//Adds a log registry 

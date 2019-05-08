@@ -1,11 +1,11 @@
 /*jshint esversion: 6 */
-var ContentBase = require('./contentBase.js');
+var Representation = require('./representation.js');
 
-class ContentComposed extends ContentBase{
+class RepresentationComposed extends Representation{
 
-    constructor(name, parentContent, creator, rotation = 0) {
-        super(name, "composed", parentContent.size, creator);
-        this.parent = parentContent;
+    constructor(name, parentrepresentation, creator, rotation = 0) {
+        super(name, "composed", parentrepresentation.size, creator);
+        this.parent = parentrepresentation;
         this.children = [];
 
         //Apply rotation if not 0
@@ -15,16 +15,15 @@ class ContentComposed extends ContentBase{
      /** Rotates parent points
      * @param rotation angle in radians
      */
-    rotatePoints(content, rotation) {
-        if (content.type=="composed"){
-            this.rotation(content.parent, rotation);
+    rotatePoints(representation, rotation) {
+        if (representation.type=="composed"){
+            this.rotation(representation.parent, rotation);
             return;
         }
 
-        console.log("name:"+content.name +" points "+content.points);
-        let points = content.points;
+        let points = representation.points;
         for(let i=0; i < points.length; i++){
-            let newPoint = ContentBase.rotatePoint(rotation, points[i].x , points[i].y);
+            let newPoint = Representation.rotatePoint(rotation, points[i].x , points[i].y);
 
             //Rotate Point
             points[i].x = newPoint.x; points[i].y = newPoint.y;
@@ -32,19 +31,19 @@ class ContentComposed extends ContentBase{
     }
 
     //Normal percentage varies betwen 0-1
-    addChildren(content, region, percentage, creator){
+    addChildren(representation, region, percentage, creator){
 
         //Moves the points to the desired position
-        this.shiftPosition(content, region, percentage);
+        this.shiftPosition(representation, region, percentage);
 
         //Add children
-    	this.children.push({id: this.children.length, content: content, region: region});
+    	this.children.push({id: this.children.length, representation: representation, region: region});
 
         //Adds a log registry 
         this.changed_by.push({
             changed_by: creator, 
             changed_at: new Date(), 
-            summary: content.name + " has been added has child."
+            summary: representation.name + " has been added has child."
         });
 
         return this.children.length-1;
@@ -53,16 +52,16 @@ class ContentComposed extends ContentBase{
     //!!VER MELHOR
     //An method that reajust the position of the points
     //based in the region and the percentage
-    shiftPosition(content, region, percentage){
-        if (content.type=="composed"){
-            this.shiftPosition(content.parent, region, percentage);
-            content.children.forEach((element) => {
-                this.shiftPosition(element.content, region, percentage);
+    shiftPosition(representation, region, percentage){
+        if (representation.type=="composed"){
+            this.shiftPosition(representation.parent, region, percentage);
+            representation.children.forEach((element) => {
+                this.shiftPosition(element.representation, region, percentage);
             });
             return;
         }
 
-        let points = content.points;
+        let points = representation.points;
         //Converts to the given percentage
         for(let i=0; i< points.length; i++){
             points[i].id = this.size++;
@@ -83,8 +82,8 @@ class ContentComposed extends ContentBase{
     }
 
     //GridLayout
-    /*addChildren(content, region){
-        let points = content.points;
+    /*addChildren(representation, region){
+        let points = representation.points;
 
 
         //Converts to a 1/3 scale
@@ -100,7 +99,7 @@ class ContentComposed extends ContentBase{
             points[i].y = points[i].y * Math.round(region.y/0.3);
         }
 
-        this.children.push({content: content, region: region});
+        this.children.push({representation: representation, region: region});
     }
 
     /*A method that delegates moviment to a point*/
@@ -135,4 +134,4 @@ class ContentComposed extends ContentBase{
     }*/
 }
 
-module.exports = ContentComposed, ContentBase;
+module.exports = RepresentationComposed, Representation;

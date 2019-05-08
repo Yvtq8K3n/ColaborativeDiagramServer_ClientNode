@@ -2,7 +2,7 @@
 
 const ORIGIN = {x:0.5, y:0.5}
 
-class ContentBase {
+class representationBase {
     constructor(name, type, size, creator) {
         this.name = name;
         this.type = type;
@@ -14,7 +14,7 @@ class ContentBase {
         this.changed_by.push({
             changed_by: creator, 
             changed_at: new Date(), 
-            summary:"Content was successfully created."
+            summary:"representation was successfully created."
         });
     }
 
@@ -47,4 +47,4 @@ class ContentBase {
     }
 }
 
-module.exports = ContentBase;
+module.exports = representationBase;

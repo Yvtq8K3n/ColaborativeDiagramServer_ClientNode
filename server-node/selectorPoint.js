@@ -6,11 +6,11 @@ const Orientation  = Object.freeze({
 });
 
 class SelectorPoint {
-    constructor(id, x, y, content, orientation, creator) {
+    constructor(id, x, y, representation, orientation, creator) {
         this.id = id;
         this.x = x;
         this.y = y;
-        this.content = content;
+        this.representation = representation;
         this.orientation = orientation;
         this.creator = creator;
         this.changed_by = [];

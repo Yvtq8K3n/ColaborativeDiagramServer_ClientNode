@@ -1,10 +1,10 @@
 /*jshint esversion: 6 */
 
-var ContentBase = require('./contentBase.js');
+var Representation = require('./representation.js');
 
 const ORIGIN = {x:0.5, y:0.5}
 
-class Content extends ContentBase{
+class RepresentationSimple extends Representation{
 
     constructor(name, points, creator, rotation = 0) {
         super(name, "basic", points.length, creator);
@@ -34,7 +34,7 @@ class Content extends ContentBase{
             let newPoint = this.rotatePoint(angle, previous.x , previous.y);
             points.push({id:i, x:newPoint.x, y:newPoint.y});
         }
-        return new Content(name, points, creator, rotation);
+        return new RepresentationSimple(name, points, creator, rotation);
     }
 
     /** Rotates all points
@@ -42,7 +42,7 @@ class Content extends ContentBase{
      */
     rotatePoints(rotation) {
         for(let i=0; i < this.points.length; i++){
-            let newPoint = ContentBase.rotatePoint(rotation, this.points[i].x , this.points[i].y);
+            let newPoint = Representation.rotatePoint(rotation, this.points[i].x , this.points[i].y);
 
             //Rotate Point
             this.points[i].x = newPoint.x; this.points[i].y = newPoint.y;
@@ -84,4 +84,4 @@ class Content extends ContentBase{
     }*/
 }
 
-module.exports = Content, ContentBase;
+module.exports = RepresentationSimple, Representation;
