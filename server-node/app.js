@@ -117,7 +117,7 @@ io.on('connection', function (socket){
     socket.on('createSelector', function (data, fn) {
     	try{
 	     	//Retrieve representation
-	     	let representation = classDiagram.retrieveRepresentation(data.representation);
+	     	let representation = classDiagram.retrieveRepresentation(data.representation.name);
 
 		    //Create Selector
 		    let selector = classDiagram.createSelector(data.name, representation, data.amount, data.corners, data.creator);
