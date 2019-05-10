@@ -32,7 +32,7 @@ class Diagram {
     generateDefaultSelectors(){
         //Generate Selectors
         let none = new Selector("None");
-        let defaultSelector = this.createSelector("Default", this.retrieveRepresentation("Square"), 4);
+        let defaultSelector = this.createSelector("Default", "@SCD", this.retrieveRepresentation("Square"), 4);
 
         //Add Selectors
         this.selectors.push(none, defaultSelector);
@@ -69,15 +69,20 @@ class Diagram {
         return representationComposed;
     }
 
-    createSelector(name, creator = "@SCD", representation, amount, corners, constructions){
-        if (amount % 2 != 0) throw "The amount of selectorPoints must be even";
-
+    createSelector(name, creator, representation, amount, corners, constructions){
         let selector = new Selector(name, creator);
-        selector.addPointsAmount(representation, creator, amount);
-        if (corners == true) selector.addPointOnCorners(representation, creator);
-        constructions.forEach(construction => {
-           selector.addPointsConstruction(representation, creator, construction);
-        };
+
+        if(typeof amount !== 'undefined' && amount !== null) {
+            if (amount % 2 != 0) throw "The amount of selectorPoints must be even";
+            selector.addPointsAmount(representation, creator, amount);
+        }
+
+        if (corners == true) selector.addPointsOnCorners(representation, creator);
+        if(typeof constructions !== 'undefined' && constructions !== null){
+            constructions.forEach(construction => {
+                selector.addPointsConstruction(representation, creator, construction);
+            });
+        }
        
         this.selectors.push(selector); 
         return selector;

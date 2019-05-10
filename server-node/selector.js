@@ -41,7 +41,7 @@ class Selector {
     }
 
     //Adds to the selector
-    addPointsAmount(representation, creator, amount){
+    addPointsAmount(representation, creator, amount = 0){
     	for(let i = 0; i< amount; i++){
     		let region = RegionName[i%4];
 
@@ -51,7 +51,7 @@ class Selector {
 	}
 
     //Adds 4 points in each corner in case corners dont have points
-    addPointOnCorners(representation, creator){
+    addPointsOnCorners(representation, creator){
         if (this.corners.length<=0) {
             this.addSelectorPoint(this.corners, "NORTHWEST", representation, creator);
             this.addSelectorPoint(this.corners, "NORTHEAST", representation, creator);
@@ -62,20 +62,19 @@ class Selector {
 
     addPointsConstruction(representation, creator, construction){
         switch (construction){
-            case "CORNERS"{
+            case "CORNERS":
                this.addPointsOnCorners(representation, creator); 
-               break;               
-            }
-            case "DEFAULT"{
-                this.addSelectorPoints(representation, creator, 4);
-                break;
-            }
+            break;               
+            case "DEFAULT":
+                this.addPointsAmount(representation, creator, 4);
+            break;
             //It's a specific region then
             default: this.addPointOnRegion(representation, creator, construction);
         }
     }
 
-    addPointOnRegion(region, creator, representation){
+    addPointOnRegion(representation, creator, region){
+
         switch(region){
             case "NORTH":
                 this.addSelectorPoint(this.north, region, representation, creator);
