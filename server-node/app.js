@@ -120,7 +120,7 @@ io.on('connection', function (socket){
 	     	let representation = classDiagram.retrieveRepresentation(data.representation);
 
 		    //Create Selector
-		    let selector = classDiagram.createSelector(data.name, representation, data.amount, data.corners, data.creator);
+		    let selector = classDiagram.createSelector(data.name, data.creator, representation, data.amount, data.corners, data.constructions);
 
 	        //Notify message
 	        fn(data.name+": Selector was created", selector);
@@ -162,11 +162,6 @@ io.on('connection', function (socket){
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     /// Elements																             		  ///
     /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-  
-    
-    
 
      socket.on('disconnect', function () {
        console.log('user disconnected');

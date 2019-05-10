@@ -69,13 +69,17 @@ class Diagram {
         return representationComposed;
     }
 
-    createSelector(name, representation, amount, corners, creator = "@SCD"){
+    createSelector(name, creator = "@SCD", representation, amount, corners, constructions){
         if (amount % 2 != 0) throw "The amount of selectorPoints must be even";
 
         let selector = new Selector(name, creator);
-        selector.addSelectorPoints(representation, amount, creator, corners);;
-        this.selectors.push(selector);
-        
+        selector.addPointsAmount(representation, creator, amount);
+        if (corners == true) selector.addPointOnCorners(representation, creator);
+        constructions.forEach(construction => {
+           selector.addPointsConstruction(representation, creator, construction);
+        };
+       
+        this.selectors.push(selector); 
         return selector;
     }
 

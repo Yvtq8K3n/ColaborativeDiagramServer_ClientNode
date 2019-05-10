@@ -24,7 +24,6 @@ const Orientation  = Object.freeze({
 class Selector {
     constructor(name, creator = "@SCD") {
     	this.name = name;
-
     	this.corners = [];
         this.north = [];
         this.south = [];
@@ -42,33 +41,58 @@ class Selector {
     }
 
     //Adds to the selector
-    addSelectorPoints(representation, amount, creator, corners = false){
-    	if (corners) {
-    		this.addSelectorPoint(this.corners, "NORTHWEST", representation, creator);
-    		this.addSelectorPoint(this.corners, "NORTHEAST", representation, creator);
-    		this.addSelectorPoint(this.corners, "SOUTHWEST", representation, creator);
-    	    this.addSelectorPoint(this.corners, "SOUTHEAST", representation, creator);
-    	}
-
+    addPointsAmount(representation, creator, amount){
     	for(let i = 0; i< amount; i++){
     		let region = RegionName[i%4];
 
-    		switch(region){
-    			case "NORTH":
-    				this.addSelectorPoint(this.north, region, representation, creator);
-    			break;
-    			case "SOUTH":
-    				this.addSelectorPoint(this.south, region, representation, creator);
-    			break;
-    			case "WEST":
-    				this.addSelectorPoint(this.west,  region, representation, creator);
-    			break;
-    			case "EAST":
-    				this.addSelectorPoint(this.east,  region, representation, creator);
-    			break;
-    		}    	
+            //Adds Point by region
+    		this.addPointOnRegion(representation, creator, region);
     	}
 	}
+
+    //Adds 4 points in each corner in case corners dont have points
+    addPointOnCorners(representation, creator){
+        if (this.corners.length<=0) {
+            this.addSelectorPoint(this.corners, "NORTHWEST", representation, creator);
+            this.addSelectorPoint(this.corners, "NORTHEAST", representation, creator);
+            this.addSelectorPoint(this.corners, "SOUTHWEST", representation, creator);
+            this.addSelectorPoint(this.corners, "SOUTHEAST", representation, creator);
+        }
+    }
+
+    addPointsConstruction(representation, creator, construction){
+        switch (construction){
+            case "CORNERS"{
+               this.addPointsOnCorners(representation, creator); 
+               break;               
+            }
+            case "DEFAULT"{
+                this.addSelectorPoints(representation, creator, 4);
+                break;
+            }
+            //It's a specific region then
+            default: this.addPointOnRegion(representation, creator, construction);
+        }
+    }
+
+    addPointOnRegion(region, creator, representation){
+        switch(region){
+            case "NORTH":
+                this.addSelectorPoint(this.north, region, representation, creator);
+            break;
+            case "SOUTH":
+                this.addSelectorPoint(this.south, region, representation, creator);
+            break;
+            case "WEST":
+                this.addSelectorPoint(this.west,  region, representation, creator);
+            break;
+            case "EAST":
+                this.addSelectorPoint(this.east,  region, representation, creator);
+            break;
+        }    
+    }
+
+    
 
     addSelectorPoint(area, region, representation, creator){
     	let size = area.length + 1;
