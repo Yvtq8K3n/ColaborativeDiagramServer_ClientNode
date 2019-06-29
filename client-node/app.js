@@ -7,13 +7,19 @@ socket.on('connect', function (socket) {
     console.log('Connected!');
 });
 
-socket.on('contents', function (data) {
-	console.log("Contents:")
+socket.on('elements', function (data) {
+	console.log("elements:");
 	console.log(data);
 	//console.log(JSON.stringify(data, null, 4));
 });
 
-socket.emit('createContent',
+socket.on('elementCreated', function (data) {
+	console.log("\n\n\n\nSomeone created a new element!");
+	console.log(data);
+	//console.log(JSON.stringify(data, null, 4));
+});
+
+socket.emit('createElement',
 	{
 		name:"MyTriangle", 
 		points: [
@@ -28,8 +34,10 @@ socket.emit('createContent',
 	}
 );
 
+
+
 //Create Illuminati
-socket.emit('createContentComposed',
+/*socket.emit('createContentComposed',
 	{
 		name:"Illuminati",
 		parent:"MyTriangle", 
@@ -37,8 +45,8 @@ socket.emit('createContentComposed',
 	}, function (message, data) { // args are sent in order to acknowledgement function
 		console.log("\nContentComposed: "+message, data);  		
 	}
-);
-socket.emit('addContentComposedChild',
+);*/
+/*socket.emit('addContentComposedChild',
 	{
 		composed:"Illuminati",
 		name: "Hexagon", 
@@ -98,8 +106,8 @@ socket.emit('addContentComposedChild',
 socket.emit('createSelector',
 	{
 		name: "MySelector", 
-		content: "Square", 
-		amount: 8,
+		representation: "Square", 
+		amount: 4,
 		corners: true,
 		creator: "client-node"
 	}, function (message, data) { // args are sent in order to acknowledgement function
@@ -107,7 +115,7 @@ socket.emit('createSelector',
 	}
 );
 
-socket.emit('moveSelector',
+/*socket.emit('moveSelector',
 	{
 		name: "MySelector", 
 		id: 0, 
@@ -127,14 +135,27 @@ socket.emit('moveSelector',
 	}, function (message) { // args are sent in order to acknowledgement function
 		console.log("\n"+message);
 	}
+);*/
+
+/*socket.emit('createSelector',
+	{
+		name: "2SimpleSelector", 
+		representation: "Square", 
+		amount: 8,
+		corners: false,
+		constructions: null,
+		creator: "client-node"
+	}, function (message, data) { // args are sent in order to acknowledgement function
+		console.log("\Selector: "+message, data);
+	}
 );
 
 socket.emit('createSelector',
 	{
-		name: "2SimpleSelector", 
-		content: "Square", 
-		amount: 2,
+		name: "ComplexSimpleSelector", 
+		representation: "Square", 
 		corners: false,
+		constructions: ["DEFAULT", "CORNERS", "CORNERS"],
 		creator: "client-node"
 	}, function (message, data) { // args are sent in order to acknowledgement function
 		console.log("\Selector: "+message, data);

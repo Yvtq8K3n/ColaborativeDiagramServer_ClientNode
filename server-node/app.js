@@ -30,24 +30,24 @@ let classDiagram = new Diagram("ClassDiagram", "Yvtq8k3n");
 io.on('connection', function (socket){
     console.log('A new connection was created on socket:', socket.id);
 
-    //Sending Diagram representations
-    console.log("Sending the latest data!(Representations, Selectors...)\n");
-    socket.emit('representations', classDiagram.getRepresentations());
-    socket.emit('selectors', classDiagram.getSelectors());
+    //Sending Diagram elements
+    console.log("Sending the latest data!(Elements, Representations...)\n");
+    socket.emit('elements', classDiagram.getElements());
+    //socket.emit('representations', classDiagram.getSelectors());
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// representations 																             		  ///
+    /// Elements																             		  ///
     /////////////////////////////////////////////////////////////////////////////////////////////////////
-    socket.on('createRepresentationSimple', function (data, fn) {
+    socket.on('createElement', function (data, fn) {
     	try{
-    		let representation = classDiagram.createRepresentationSimple(data, data.creator);
+    		let element = classDiagram.createElement(data, data.creator);
 
 	    	//Notify message
-	   		fn(data.name+": representation was created ", representation);
-	   		console.log(data.creator +" created representation simples:"+data.name);
+	   		fn(data.name+": element was created ", element);
+	   		console.log(data.creator +" sucessfully created element: "+data.name);
 
 	   		//Notify all other clients
-	   		socket.broadcast.emit('representationCreated', representation);
+	   		socket.broadcast.emit('elementCreated', element);
     	}catch(err) {
     		console.log("Error");
     		console.log(err);
@@ -55,10 +55,10 @@ io.on('connection', function (socket){
 	   		//fn(data.name+": "+err);
 		}   		
     });
-    socket.on('createRepresentationComposed', function (data, fn) {
+    socket.on('createElementComposed', function (data, fn) {
     	try{
     		//Retrieve Parent
-    		let parent = classDiagram.retrieveRepresentation(data.parent);
+    		/*let parent = classDiagram.retrieveRepresentation(data.parent);
         	let clonedParent = JSON.parse(JSON.stringify(parent));
         	let representation = classDiagram.createRepresentationComposed(data.name, clonedParent, data.creator, data.rotation);
 
@@ -67,16 +67,16 @@ io.on('connection', function (socket){
 	        console.log(data.creator +" created representation composed:"+data.name);
 
 	   		//Notify all other clients
-	   		socket.broadcast.emit('representationCreated', representation);
+	   		socket.broadcast.emit('representationCreated', representation);*/
     	}catch(err) {
 		  	//Notify error
 	   		fn(data.name+": "+err);
 		}   	
     });
-    socket.on('addRepresentationComposedChild', function (data, fn) {
+    socket.on('addElementComposedChild', function (data, fn) {
     	try{
 	     	//Retrieve representationComposed
-	     	let representation = classDiagram.retrieveRepresentation(data.composed);
+	     	/*let representation = classDiagram.retrieveRepresentation(data.composed);
 
 	     	//Retrieve Child
         	let child = classDiagram.retrieveRepresentation(data.name);
@@ -88,7 +88,7 @@ io.on('connection', function (socket){
 	        console.log(data.creator +" added as child:"+data.name+" to representationComposed:"+representation.name);
 
 	   		//Notify all clients
-	   		io.sockets.emit('representationChildAdded', {representation: representation, childId: childId});
+	   		io.sockets.emit('representationChildAdded', {representation: representation, childId: childId});*/
     	}catch(err) {
 		  	//Notify error
 	   		fn(data.composed+": "+err);
@@ -114,7 +114,7 @@ io.on('connection', function (socket){
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     /// Selectors																             		  ///
     /////////////////////////////////////////////////////////////////////////////////////////////////////
-    socket.on('createSelector', function (data, fn) {
+    /*socket.on('createSelector', function (data, fn) {
     	try{
 	     	//Retrieve representation
 	     	let representation = classDiagram.retrieveRepresentation(data.representation);
@@ -157,7 +157,7 @@ io.on('connection', function (socket){
 		  	//Notify error
 	   		fn(data.name+": "+err);
 		}   	
-    });
+    });*/
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     /// Elements																             		  ///

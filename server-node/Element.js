@@ -2,11 +2,12 @@
 
 const ORIGIN = {x:0.5, y:0.5}
 
-class representationBase {
-    constructor(name, type, size, creator) {
+class Element {
+    constructor(name, type, size, points, creator) {
         this.name = name;
         this.type = type;
         this.size = size;
+        this.points = points;
         this.creator = creator;
         this.changed_by = [];
 
@@ -14,7 +15,7 @@ class representationBase {
         this.changed_by.push({
             changed_by: creator, 
             changed_at: new Date(), 
-            summary:"representation was successfully created."
+            summary:"Element was successfully created."
         });
     }
 
@@ -45,6 +46,29 @@ class representationBase {
 
         return {x: px.toFixed(4), y: py.toFixed(4)};
     }
+
+    /*Generates a Regular Polygon based in:
+    * @param name a simple designation of the shape
+    * @param edge will define the shape triangle - 3, rectangle - 4 
+    * @param rotation in radians
+    */
+    static generatePolygon(name, edge, rotation, creator = "@SCD") {
+        let points = [];
+
+        //Based in the amount of edges creates the points
+        let angle =  2 * Math.PI / edge;
+
+        //Create the starting point and adds it
+        points.push({id:0, x:ORIGIN.x, y:0});
+
+        //Generates points based in the Previous Points
+        for(let i=1; i<edge; i++){
+            let previous = points[i-1];
+            let newPoint = this.rotatePoint(angle, previous.x , previous.y);
+            points.push({id:i, x:newPoint.x, y:newPoint.y});
+        }
+        return new Element(name, "Element.Polygon", points.length, points, creator);
+    }
 }
 
-module.exports = representationBase;
+module.exports = Element;
