@@ -1,11 +1,28 @@
+//Has args?
+const args = {};
+process.argv
+    .slice(2, process.argv.length)
+    .forEach( arg => {
+        // long arg
+        if (arg.slice(0,2) === '--') {
+            const longArg = arg.split('=');
+            const longArgFlag = longArg[0].slice(2,longArg[0].length);
+            const longArgValue = longArg.length > 1 ? longArg[1] : true;
+            args[longArgFlag] = longArgValue;
+        }
+    });
+
 //server.js
 var http = require('http').createServer();
 var io = require('socket.io')(http);
 var axios=require('axios');
 var Diagram = require('./diagram.js');
 
-http.listen(9000, function () {
-  console.log('listening on *:8080');
+if(typeof args.port == "undefined") args.port = 9000;
+if(typeof args.ip == "undefined") args.ip = "localhost";
+
+http.listen(args.port, args.ip, function () {
+  console.log('listening on port *:'+args.port);
 });
 
 //Constants
