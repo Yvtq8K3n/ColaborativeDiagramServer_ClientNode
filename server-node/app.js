@@ -18,7 +18,7 @@ var io = require('socket.io')(http);
 var axios=require('axios');
 var Diagram = require('./diagram.js');
 
-if(typeof args.port == "undefined") args.port = 9000;
+if(typeof args.port == "undefined") args.port = 8080;
 if(typeof args.ip == "undefined") args.ip = "localhost";
 
 http.listen(args.port, args.ip, function () {
