@@ -1,5 +1,6 @@
 /*jshint esversion: 6 */
 var Element = require('./element.js');
+var Composed = require('./composed.js');
 //var RepresentationComposed = require('./Representation.Composed.js');
 
 class Diagram {
@@ -28,7 +29,7 @@ class Diagram {
 
     createElement(obj, creator){
         try{
-            //Check if object doenst exist
+            //Check if object doesn't exist
             this.retrieveElement(obj.name);
 
         }catch(err) {
@@ -60,12 +61,27 @@ class Diagram {
         return this.elements;
     }
 
-    createElementComposed(name, parent, creator, rotation){
-        //Create representation composed
-        //let representationComposed = new RepresentationComposed(name, parent, creator, rotation);
-        //this.representations.push(representationComposed);
+    createComposedElement(obj, creator){
+		try{
+            //Check if object doesn't exist
+            this.retrieveElement(obj.name);
 
-        //return representationComposed;
+        }catch(err) {
+        	let composed;
+        	if (typeof obj.points != "undefined"){
+	            //Create object
+	            composed = new Element(obj.name, obj.parentType, obj.points.length, obj.points, obj.children, creator);
+	            this.elements.push(composed);
+	        } else if (typeof obj.edge != "undefined"){
+	        	//Create object
+	            composed = Element.generatePolygon(obj.name, obj.edge, obj.rotation, obj.creator);
+	            this.elements.push(element);
+	        }  
+            return composed;
+        }
+        throw "Composed element already exists";
+		
+		
     }
 
     asdsa(){

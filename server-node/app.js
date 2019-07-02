@@ -61,7 +61,7 @@ io.on('connection', function (socket){
 
 	    	//Notify message
 	   		fn(data.name+": element was created ", element);
-	   		console.log(data.creator +" sucessfully created element: "+data.name);
+	   		console.log(data.creator +" successfully created element: "+data.name);
 
 	   		//Notify all other clients
 	   		socket.broadcast.emit('elementCreated', element);
@@ -72,19 +72,23 @@ io.on('connection', function (socket){
 	   		//fn(data.name+": "+err);
 		}   		
     });
-    socket.on('createElementComposed', function (data, fn) {
+    socket.on('createComposedElement', function (data, fn) {
     	try{
-    		//Retrieve Parent
-    		/*let parent = classDiagram.retrieveRepresentation(data.parent);
-        	let clonedParent = JSON.parse(JSON.stringify(parent));
-        	let representation = classDiagram.createRepresentationComposed(data.name, clonedParent, data.creator, data.rotation);
+    		try{
+    		let composed = classDiagram.createElement(data, data.creator);
 
-	        //Notify message
-	        fn(data.name+": representation was created ", representation);
-	        console.log(data.creator +" created representation composed:"+data.name);
+	    	//Notify message
+	   		fn(data.name+": composed element was created ", composed);
+	   		console.log(data.creator +" successfully created composed element: "+data.name);
 
 	   		//Notify all other clients
-	   		socket.broadcast.emit('representationCreated', representation);*/
+	   		socket.broadcast.emit('elementCreated', composed);
+    	}catch(err) {
+    		console.log("Error");
+    		console.log(err);
+		  	//Notify error
+	   		//fn(data.name+": "+err);
+		}   
     	}catch(err) {
 		  	//Notify error
 	   		fn(data.name+": "+err);
