@@ -1,13 +1,17 @@
 {
-  "name": "colaborativediagram",
-  "version": "1.0.0",
+  "name": "collaborative-diagram-server",
+  "version": "1.0.5",
   "description": "Contains the server-side of the colaborativediagram project",
-  "main": "app.js",
+  "main": "./bin/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "yvtq8k3n",
   "license": "MIT",
+  "preferGlobal": true,
+  "bin": {
+    "collaborative-diagram-server": "./bin/app.js"
+  },
   "dependencies": {
     "axios": "^0.18.0",
     "request": "^2.88.0",

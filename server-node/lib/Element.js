@@ -3,20 +3,28 @@
 const ORIGIN = {x:0.5, y:0.5}
 
 class Element {
-    constructor(name, type, size, points, creator) {
+    constructor(name, type, points, creator) {
         this.name = name;
         this.type = type;
-        this.size = size;
         this.points = points;
         this.creator = creator;
-        this.changed_by = [];
-
+        var _changed_by = [];
+        
         //Adds a log registry 
-        this.changed_by.push({
-            changed_by: creator, 
-            changed_at: new Date(), 
-            summary:"Element was successfully created."
+        _changed_by.push({
+                changed_by: creator, 
+                changed_at: new Date(), 
+                summary:"Element was successfully created."
         });
+
+        this.getHistory = function() { return _changed_by; }
+        this.addHistory = function(summary, creator) { 
+            _changed_by.push({
+                changed_by: creator, 
+                changed_at: new Date(), 
+                summary: summary
+            });
+        }
     }
 
     /** Utilizes the math property: x′=xcosθ−ysinθ AND y′=ycosθ+xsinθ
@@ -67,7 +75,7 @@ class Element {
             let newPoint = this.rotatePoint(angle, previous.x , previous.y);
             points.push({id:i, x:newPoint.x, y:newPoint.y});
         }
-        return new Element(name, "Element.Polygon", points.length, points, creator);
+        return new Element(name, "Element.Polygon", points, creator);
     }
 }
 

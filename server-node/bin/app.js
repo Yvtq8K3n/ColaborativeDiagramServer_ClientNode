@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 //Has args?
 const args = {};
 process.argv
@@ -16,7 +18,7 @@ process.argv
 var http = require('http').createServer();
 var io = require('socket.io')(http);
 var axios=require('axios');
-var Diagram = require('./diagram.js');
+var Diagram = require('../lib/diagram.js');
 
 if(typeof args.port == "undefined") args.port = 8080;
 if(typeof args.ip == "undefined") args.ip = "localhost";
@@ -62,7 +64,7 @@ io.on('connection', function (socket){
 	    	//Notify message
 	   		fn(data.name+": element was created ", element);
 	   		console.log(data.creator +" sucessfully created element: "+data.name);
-
+	   		console.log(element);
 	   		//Notify all other clients
 	   		socket.broadcast.emit('elementCreated', element);
     	}catch(err) {

@@ -35,7 +35,7 @@ class Diagram {
         	let element;
         	if (typeof obj.points != "undefined"){
 	            //Create object
-	            element = new Element(obj.name, obj.type, obj.points.length, obj.points, creator);
+	            element = new Element(obj.name, obj.type, obj.points, creator);
 	            this.elements.push(element);
 	        } else if (typeof obj.edge != "undefined"){
 	        	//Create object
