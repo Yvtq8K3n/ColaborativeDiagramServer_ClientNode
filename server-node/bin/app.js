@@ -50,8 +50,15 @@ io.on('connection', function (socket){
     console.log('A new connection was created on socket:', socket.id);
 
     //Sending Diagram elements
-    console.log("Sending the latest data!(Elements, Representations...)\n");
-    socket.emit('elements', classDiagram.getElements());
+    console.log("Sending the latest data!");
+    console.log("Sending the latest elements!")
+    socket.emit('elements', classDiagram.getElements(), function () { 
+        console.log("Sending the latest representations!")
+        socket.emit('representations', classDiagram.getRepresentations());
+    });
+
+
+    
     //socket.emit('representations', classDiagram.getSelectors());
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
