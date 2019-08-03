@@ -20,7 +20,7 @@ var io = require('socket.io')(http);
 var axios=require('axios');
 var Diagram = require('../lib/diagram.js');
 
-if(typeof args.port == "undefined") args.port = 8080;
+if(typeof args.port == "undefined") args.port = 9000;
 if(typeof args.ip == "undefined") args.ip = "localhost";
 
 http.listen(args.port, args.ip, function () {
@@ -59,12 +59,13 @@ io.on('connection', function (socket){
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     socket.on('createElement', function (data, fn) {
     	try{
+            console.log(data);
     		let element = classDiagram.createElement(data, data.creator);
 
 	    	//Notify message
 	   		fn(data.name+": element was created ", element);
 
-	   		console.log(data.creator +" sucessfully created element: "+data.name);
+	   		console.log("\n"+data.creator +" sucessfully created element: "+data.name);
 	   		console.log(element);
 	   		//Notify all other clients
 	   		socket.broadcast.emit('elementCreated', element);
@@ -75,28 +76,57 @@ io.on('connection', function (socket){
 	   		//fn(data.name+": "+err);
 		}   		
     });
-    socket.on('createComposedElement', function (data, fn) {
-    	try{
-    		try{
-    		let composed = classDiagram.createElement(data, data.creator);
 
-	    	//Notify message
-	   		fn(data.name+": composed element was created ", composed);
-	   		console.log(data.creator +" successfully created composed element: "+data.name);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// Representation                                                                                ///
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    socket.on('createRepresentation', function (data, fn) {
+        try{
+            //Check if element exists
+            let element = classDiagram.retrieveElement(data.element);
 
-	   		//Notify all other clients
-	   		socket.broadcast.emit('elementCreated', composed);
-    	}catch(err) {
-    		console.log("Error");
-    		console.log(err);
-		  	//Notify error
-	   		//fn(data.name+": "+err);
-		}   
-    	}catch(err) {
-		  	//Notify error
-	   		fn(data.name+": "+err);
-		}   	
+            let representation = classDiagram.createRepresentation(data, data.creator);
+
+            //Notify message
+            fn(data.name+": representation was created ", representation);
+
+            console.log("\n"+data.creator +" sucessfully created representation: "+data.name);
+            console.log(representation);
+
+            //Notify all other clients
+            socket.broadcast.emit('representationCreated', representation);
+        }catch(err) {
+            console.log("Error: "+err);
+            //Notify error
+            //fn(data.name+": "+err);
+        }           
     });
+
+    socket.on('addRepresentationProperties', function (data, fn) {
+        try{
+            console.log("\nAdding aditional properties to Representation: "+data.name);
+            //console.log(data);
+            console.log(JSON.stringify(data.properties, null, 2)); // spacing level = 2);
+            let representation = classDiagram.retrieveRepresentation(data.name);
+
+            //Merging properties into element
+            Object.assign(representation.properties, data.properties);
+
+            //Notify message
+            fn(data.name+": properties were added", representation);
+
+            //console.log(data.creator +" sucessfully created element: "+data.name);
+            //console.log(element);
+            //Notify all other clients
+            //socket.broadcast.emit('elementCreated', element);
+        }catch(err) {
+             console.log("Error: "+err);
+            //Notify error
+            //fn(data.name+": "+err);
+        }           
+    });
+
+
     socket.on('addElementComposedChild', function (data, fn) {
     	try{
 	     	//Retrieve representationComposed

@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 var Element = require('./element.js');
-var Composed = require('./composed.js');
+var Representation = require('./representation.js');
 //var RepresentationComposed = require('./Representation.Composed.js');
 
 class Diagram {
@@ -9,7 +9,7 @@ class Diagram {
         this.diagramId = name;
         this.creator = creator;
         this.elements = [];
-        this.selectors = [];
+        this.representations = [];
         this.generateDefaultElements();
     }
 
@@ -35,8 +35,11 @@ class Diagram {
         }catch(err) {
         	let element;
         	if (typeof obj.points != "undefined"){
-	            //Create object
-	            element = new Element(obj.name, obj.type, obj.points, creator);
+
+                //Create object
+                if (obj.type!="Composed") element = new Element(obj.name, obj.type, obj.points, creator);
+                else element = new Composed(obj.name, obj.parentType, obj.points.length, obj.points, obj.children, creator);
+	           
 	            this.elements.push(element);
 	        } else if (typeof obj.edge != "undefined"){
 	        	//Create object
@@ -54,34 +57,36 @@ class Diagram {
                 return this.elements[i];
             }
         }
-        throw "representation not found";
+        throw "element not found";
     }
-
     getElements(){
         return this.elements;
     }
 
-    createComposedElement(obj, creator){
-		try{
+    createRepresentation(obj, creator){
+        try{
             //Check if object doesn't exist
-            this.retrieveElement(obj.name);
+            this.retrieveRepresentation(obj.name);
 
         }catch(err) {
-        	let composed;
-        	if (typeof obj.points != "undefined"){
-	            //Create object
-	            composed = new Element(obj.name, obj.parentType, obj.points.length, obj.points, obj.children, creator);
-	            this.elements.push(composed);
-	        } else if (typeof obj.edge != "undefined"){
-	        	//Create object
-	            composed = Element.generatePolygon(obj.name, obj.edge, obj.rotation, obj.creator);
-	            this.elements.push(element);
-	        }  
-            return composed;
+            let representation = new Representation(obj.name, obj.element, obj.location, obj.size, creator);
+            this.representations.push(representation);
+            return representation;
         }
-        throw "Composed element already exists";
-		
-		
+        throw "representations already exists";
+    }
+
+    retrieveRepresentation(name){
+        for(var i = 0; i < this.representations.length; i++) {
+            if (this.representations[i].name == name) {
+                return this.representations[i];
+            }
+        }
+        throw "representations not found";
+    }
+
+    getRepresentations(){
+        return this.representations;
     }
 
     asdsa(){

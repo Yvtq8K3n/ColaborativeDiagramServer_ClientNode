@@ -5,8 +5,8 @@ const ORIGIN = {x:0.5, y:0.5}
 class Composed {
     constructor(name, parentType, size, points, children, creator) {
         this.name = name;
-        this.parentType = parentType;
-        this.size = size;
+        this.parent = parent;
+        this.type = type;
         this.points = points;
 		this.children = children;
         this.creator = creator;
@@ -72,4 +72,4 @@ class Composed {
     }
 }
 
-module.exports = Element;
+module.exports = Composed;
