@@ -78,11 +78,12 @@ class Diagram {
 
     retrieveRepresentation(name){
         for(var i = 0; i < this.representations.length; i++) {
+            console.log(this.representations[i])
             if (this.representations[i].name == name) {
                 return this.representations[i];
             }
         }
-        throw "representations not found";
+        throw "representation not found";
     }
 
     getRepresentations(){

@@ -112,8 +112,8 @@ io.on('connection', function (socket){
     socket.on('addRepresentationProperties', function (data, fn) {
         try{
             console.log("\nAdding aditional properties to Representation: "+data.name);
-            //console.log(data);
-            console.log(JSON.stringify(data.properties, null, 2)); // spacing level = 2);
+
+            //console.log(JSON.stringify(data.properties, null, 2)); // spacing level = 2);
             let representation = classDiagram.retrieveRepresentation(data.name);
 
             //Merging properties into element
@@ -124,8 +124,9 @@ io.on('connection', function (socket){
 
             //console.log(data.creator +" sucessfully created element: "+data.name);
             //console.log(element);
+
             //Notify all other clients
-            //socket.broadcast.emit('elementCreated', element);
+            socket.broadcast.emit('representationPropertiesAdded', representation);
         }catch(err) {
              console.log("Error: "+err);
             //Notify error
