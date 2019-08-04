@@ -38,7 +38,7 @@ class Diagram {
 
                 //Create object
                 if (obj.type!="Composed") element = new Element(obj.name, obj.type, obj.points, creator);
-                else element = new Composed(obj.name, obj.parentType, obj.points.length, obj.points, obj.children, creator);
+                else element = new Composed(obj.name, obj.parent, obj.points.length, obj.points, obj.children, creator);
 	           
 	            this.elements.push(element);
 	        } else if (typeof obj.edge != "undefined"){

@@ -3,7 +3,7 @@
 const ORIGIN = {x:0.5, y:0.5}
 
 class Composed {
-    constructor(name, parentType, size, points, children, creator) {
+    constructor(name, parent, size, points, children, creator) {
         this.name = name;
         this.parent = parent;
         this.type = type;
