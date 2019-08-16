@@ -3,7 +3,7 @@
 const ORIGIN = {x:0.5, y:0.5}
 
 class Element {
-    constructor(name, type, points, creator) {
+    constructor(name, points, type, creator) {
         this.name = name;
         this.type = type;
         this.points = points;
@@ -75,7 +75,7 @@ class Element {
             let newPoint = this.rotatePoint(angle, previous.x , previous.y);
             points.push({id:i, x:newPoint.x, y:newPoint.y});
         }
-        return new Element(name, "Element.Polygon", points, creator);
+        return new Element(name, points, "Element.Polygon", creator);
     }
 }
 

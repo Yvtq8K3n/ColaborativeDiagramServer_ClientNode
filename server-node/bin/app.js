@@ -65,15 +65,15 @@ io.on('connection', function (socket){
     /// Elements																             		  ///
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     socket.on('createElement', function (data, fn) {
-    	try{
-            console.log(data);
-    		let element = classDiagram.createElement(data, data.creator);
+    	try{   
+            console.log("\nCreating element: "+data.name);
+    		let element = classDiagram.createElement(data);
 
 	    	//Notify message
 	   		fn(data.name+": element was created ", element);
 
 	   		console.log("\n"+data.creator +" sucessfully created element: "+data.name);
-	   		console.log(element);
+	   		//console.log(element);
 	   		//Notify all other clients
 	   		socket.broadcast.emit('elementCreated', element);
     	}catch(err) {
@@ -81,7 +81,26 @@ io.on('connection', function (socket){
     		console.log(err);
 		  	//Notify error
 	   		//fn(data.name+": "+err);
-		}   		
+		}   		    
+    });
+
+     socket.on('addComposedChild', function (data, fn) {
+        try{
+            console.log("\nAdding/Updating child to Element: "+data.name);
+            console.log(JSON.stringify(data, null, 2)); // spacing level = 2);
+            
+            let element = classDiagram.addElementComposedChild(data);
+
+            //Notify message
+            fn(element.name+": has a new child", element);
+
+            //Notify all other clients
+            socket.broadcast.emit('elementComposedChildAdded', element);
+        }catch(err) {
+             console.log("Error: "+err);
+            //Notify error
+            //fn(data.name+": "+err);
+        }           
     });
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,8 +131,8 @@ io.on('connection', function (socket){
     socket.on('addRepresentationProperties', function (data, fn) {
         try{
             console.log("\nAdding aditional properties to Representation: "+data.name);
-
-            //console.log(JSON.stringify(data.properties, null, 2)); // spacing level = 2);
+            console.log(JSON.stringify(data.properties, null, 2)); // spacing level = 2);
+            
             let representation = classDiagram.retrieveRepresentation(data.name);
 
             //Merging properties into element

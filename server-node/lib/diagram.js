@@ -1,5 +1,6 @@
 /*jshint esversion: 6 */
-var Element = require('./element.js');
+var Element = require('./Element.js');
+var Composed = require('./Composed.js')
 var Representation = require('./representation.js');
 //var RepresentationComposed = require('./Representation.Composed.js');
 
@@ -12,6 +13,10 @@ class Diagram {
         this.representations = [];
         this.generateDefaultElements();
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// Elements                                                                                      ///
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
 
     generateDefaultElements(){
         //Generate elements
@@ -27,21 +32,22 @@ class Diagram {
         this.elements.push(rhombus, square, pentagon, hexagon);
     }
 
-    createElement(obj, creator){
+    createElement(obj){
         try{
             //Check if object doesn't exist
             this.retrieveElement(obj.name);
 
         }catch(err) {
         	let element;
-        	if (typeof obj.points != "undefined"){
+        	if (typeof obj.type != "undefined"){
 
                 //Create object
-                if (obj.type!="Composed") element = new Element(obj.name, obj.type, obj.points, creator);
-                else element = new Composed(obj.name, obj.parent, obj.points.length, obj.points, obj.children, creator);
+                if (obj.type == "Element.Composed") element = new Composed(obj.name, obj.parent, obj.type, obj.creator);
+                else element = new Element(obj.name, obj.points, obj.type, obj.creator);
 	           
 	            this.elements.push(element);
 	        } else if (typeof obj.edge != "undefined"){
+
 	        	//Create object
 	            element = Element.generatePolygon(obj.name, obj.edge, obj.rotation, obj.creator);
 	            this.elements.push(element);
@@ -49,6 +55,19 @@ class Diagram {
             return element;
         }
         throw "element already exists";
+    }
+
+    addElementComposedChild(obj){
+        let composed = this.retrieveElement(obj.name);
+
+        obj.children.forEach((children)=>{
+            let child = composed.getChildren(children.id);
+            if(child == null) {
+                composed.addChildren(children.id, children.name, children.start, children.end, obj.creator);
+            }
+            //else could merge it, basicaly an update like i did on representations
+        });
+        return composed;
     }
 
     retrieveElement(name){
@@ -59,10 +78,17 @@ class Diagram {
         }
         throw "element not found";
     }
+
     getElements(){
         return this.elements;
     }
 
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// Representation                                                                                ///
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
     createRepresentation(obj, creator){
         try{
             //Check if object doesn't exist
@@ -78,7 +104,7 @@ class Diagram {
 
     retrieveRepresentation(name){
         for(var i = 0; i < this.representations.length; i++) {
-            console.log(this.representations[i])
+
             if (this.representations[i].name == name) {
                 return this.representations[i];
             }
